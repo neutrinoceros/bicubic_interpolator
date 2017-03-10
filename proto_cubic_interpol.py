@@ -47,12 +47,12 @@ for i in range(nrad) :
     while (x[i_old] < refined_x[i]) :
         i_old += 1
         update_required = True
-    if update_required and i_old > 2 and i_old < N-2:
+    if update_required and i_old > 1 and i_old < N:
         X0,X1,X2,X3 = x   [i_old-2:i_old+2]
         P0,P1,P2,P3 = data[i_old-2:i_old+2]
         A,B,C,D = update_coefficients(X0,P0,X1,P1,X2,P2,X3,P3)
         print refined_x [i], X0,X1,X2,X3
-    if i_old > 2 and i_old < N-2 : #forget about the borders for now
+    if i_old > 1 and i_old < N : #forget about the borders for now
         interpol_data[i] = interpolation_Cubique(A,B,C,D,P0,P1,P2,P3,refined_x[i])
 
 plt.scatter(x,data)
