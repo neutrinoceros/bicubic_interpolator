@@ -94,14 +94,14 @@ for j in range(len(Y_new)) :
             X0,X1,X2,X3 = X_old [i_old-2:i_old+2]
             P0,P1,P2,P3 = data  [j,i_old-2:i_old+2]
             A,B,C,D = update_coefficients(X0,P0,X1,P1,X2,P2,X3,P3)
-        if i_old > 1 and i_old < xnb_pts*2 : #forget about the borders for now
+        if i_old > 1 and i_old < xnb_pts : #forget about the borders for now
             interpol_1d_x[i] = interpolation_Cubique(A,B,C,D,X_new[i])
 
         #print interpol_1d_x
     ax.scatter(X_old,Y_old[j]*np.ones(len(X_old)),data[j])
     ax.plot(X_new,Y_new[j]*np.ones(len(X_new)),interpol_1d_x, color='r')
 
-plt.ion();plt.show();plt.ioff();raw_input()# uncomment for tests purposes
+plt.ion();plt.show();plt.ioff();raw_input("press anykey to quit    ")# uncomment for tests purposes
 #plt.savefig("coucou.png")
 
     
