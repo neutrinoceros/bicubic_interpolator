@@ -42,7 +42,7 @@ def interpolation_Cubique(a,b,c,d,x) :
 fig = plt.figure()
 ax = fig.gca(projection='3d')
 
-for j in range(2,4) : 
+for j in range(1,5) : 
     N = 10
     x = np.linspace(-1,2,N+1)
     data = rd.normal(1,0.1,N+1)
@@ -51,7 +51,7 @@ for j in range(2,4) :
     
     nrad = 1000
     refined_x = np.linspace(-1,2,nrad+1)
-    #refined_y = np.linspace(-1,2,nrad+1)
+    refined_y = np.ones(len(refined_x))*j
     interpol_data = np.zeros(nrad+1)
 
     A,B,C,D = 0.,0.,0.,0.
@@ -76,7 +76,7 @@ for j in range(2,4) :
             interpol_data[i] = interpolation_Cubique(A,B,C,D,refined_x[i])
 
     ax.scatter(x,y,data)
-    #ax.plot(refined_x,refined_y,interpol_data, color='r')
+    ax.plot(refined_x,refined_y,interpol_data, color='r')
     
 plt.savefig("coucou.png")
 
