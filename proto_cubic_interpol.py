@@ -1,12 +1,15 @@
 #!/usr/bin/python
 
-#import
+# imports ----------------------------------------------------------------
+
 import numpy as np
 from numpy import random as rd
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
+
 # defintions -------------------------------------------------------------
+
 def update_coefficients(x0,p0,x1,p1,x2,p2,x3,p3) :
     # those formulas where calculated and copied/pasted from Mathematica
     a=p0/((x0-x1)*(x0-x2)*(x0-x3))\
@@ -23,12 +26,12 @@ def update_coefficients(x0,p0,x1,p1,x2,p2,x3,p3) :
         +(p0*(x2*x3+x1*(x2+x3)))/((x0-x1)*(x0-x2)*(x0-x3))
     d=-((p0*x1*x2*x3)/((x0-x1)*(x0-x2)*(x0-x3)))\
         +x0*((p1*x2*x3)/((x0-x1)*(x1-x2)*(x1-x3))\
-             +(p2*x1*x3)/((x0-x2)*(-x1+x2)*(x2-x3))\
-             +(p3*x1*x2)/((x0-x3)*(-x1+x3)*(-x2+x3)))
+        +(p2*x1*x3)/((x0-x2)*(-x1+x2)*(x2-x3))\
+        +(p3*x1*x2)/((x0-x3)*(-x1+x3)*(-x2+x3)))
     return a,b,c,d
 
 def interpolation_Cubique(a,b,c,d,x) :
-    return d + c*x + b*x**2 + a*x**3
+    return a*x**3 + b*x**2 + c*x + d
 
 # def interpolation_BiCubique(p00,p01,p02, ... ,x,y) :
 #     f = interpolation_Cubique
