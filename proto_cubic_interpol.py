@@ -5,17 +5,28 @@ import numpy as np
 from numpy import random as rd
 import matplotlib.pyplot as plt
 
-#defintions
-A,B,C,D = 0.,0.,0.,0.
+# defintions -------------------------------------------------------------
 def update_coefficients(x0,p0,x1,p1,x2,p2,x3,p3) :
     # those formulas where calculated and copied/pasted from Mathematica
-    a=p0/((x0-x1)*(x0-x2)*(x0-x3))-p1/((x0-x1)*(x1-x2)*(x1-x3))+p2/((x0-x2)*(x1-x2)*(x2-x3))-p3/((x0-x3)*(-x1+x3)*(-x2+x3))
-    b=(p2*(x0+x1+x3))/((x0-x2)*(-x1+x2)*(x2-x3))+(p3*(x0+x1+x2))/((x0-x3)*(-x1+x3)*(-x2+x3))+(p1*(x0+x2+x3))/((x0-x1)*(x1-x2)*(x1-x3))-(p0*(x1+x2+x3))/((x0-x1)*(x0-x2)*(x0-x3))
-    c=-((p3*(x1*x2+x0*(x1+x2)))/((x0-x3)*(-x1+x3)*(-x2+x3)))-(p2*(x1*x3+x0*(x1+x3)))/((x0-x2)*(-x1+x2)*(x2-x3))-(p1*(x2*x3+x0*(x2+x3)))/((x0-x1)*(x1-x2)*(x1-x3))+(p0*(x2*x3+x1*(x2+x3)))/((x0-x1)*(x0-x2)*(x0-x3))
-    d=-((p0*x1*x2*x3)/((x0-x1)*(x0-x2)*(x0-x3)))+x0*((p1*x2*x3)/((x0-x1)*(x1-x2)*(x1-x3))+(p2*x1*x3)/((x0-x2)*(-x1+x2)*(x2-x3))+(p3*x1*x2)/((x0-x3)*(-x1+x3)*(-x2+x3)))
+    a=p0/((x0-x1)*(x0-x2)*(x0-x3))\
+       -p1/((x0-x1)*(x1-x2)*(x1-x3))\
+       +p2/((x0-x2)*(x1-x2)*(x2-x3))\
+       -p3/((x0-x3)*(-x1+x3)*(-x2+x3))
+    b=(p2*(x0+x1+x3))/((x0-x2)*(-x1+x2)*(x2-x3))\
+        +(p3*(x0+x1+x2))/((x0-x3)*(-x1+x3)*(-x2+x3))\
+        +(p1*(x0+x2+x3))/((x0-x1)*(x1-x2)*(x1-x3))\
+        -(p0*(x1+x2+x3))/((x0-x1)*(x0-x2)*(x0-x3))
+    c=-((p3*(x1*x2+x0*(x1+x2)))/((x0-x3)*(-x1+x3)*(-x2+x3)))-\
+        (p2*(x1*x3+x0*(x1+x3)))/((x0-x2)*(-x1+x2)*(x2-x3))\
+        -(p1*(x2*x3+x0*(x2+x3)))/((x0-x1)*(x1-x2)*(x1-x3))\
+        +(p0*(x2*x3+x1*(x2+x3)))/((x0-x1)*(x0-x2)*(x0-x3))
+    d=-((p0*x1*x2*x3)/((x0-x1)*(x0-x2)*(x0-x3)))\
+        +x0*((p1*x2*x3)/((x0-x1)*(x1-x2)*(x1-x3))\
+             +(p2*x1*x3)/((x0-x2)*(-x1+x2)*(x2-x3))\
+             +(p3*x1*x2)/((x0-x3)*(-x1+x3)*(-x2+x3)))
     return a,b,c,d
 
-def interpolation_Cubique(a,b,c,d,p0,p1,p2,p3,x) :
+def interpolation_Cubique(a,b,c,d,x) :
     return d + c*x + b*x**2 + a*x**3
 
 # def interpolation_BiCubique(p00,p01,p02, ... ,x,y) :
@@ -25,15 +36,17 @@ def interpolation_Cubique(a,b,c,d,p0,p1,p2,p3,x) :
 #              f(p20,p21,p22,p23,y),
 #              f(p30,p31,p32,p33,y),x)
 
-#script
+
+# script -----------------------------------------------------------------
 N = 10
 x = np.linspace(-1,2,N+1)
-data = rd.normal(1,1,N+1)
+data = rd.normal(1,0.1,N+1)
 
 nrad = 1000
 refined_x = np.linspace(-1,2,nrad+1)
 interpol_data = np.zeros(nrad+1)
 
+A,B,C,D = 0.,0.,0.,0.
 i_old = 0
 # uncomment this when ready to dev border conditions
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -51,12 +64,10 @@ for i in range(nrad) :
         X0,X1,X2,X3 = x   [i_old-2:i_old+2]
         P0,P1,P2,P3 = data[i_old-2:i_old+2]
         A,B,C,D = update_coefficients(X0,P0,X1,P1,X2,P2,X3,P3)
-        print refined_x [i], X0,X1,X2,X3
     if i_old > 1 and i_old < N : #forget about the borders for now
-        interpol_data[i] = interpolation_Cubique(A,B,C,D,P0,P1,P2,P3,refined_x[i])
+        interpol_data[i] = interpolation_Cubique(A,B,C,D,refined_x[i])
 
 plt.scatter(x,data)
-#plt.scatter(refined_x,interpol_data, marker='+', color='r')
 plt.plot(refined_x,interpol_data, color='r')
 plt.savefig("coucou.png")
 
