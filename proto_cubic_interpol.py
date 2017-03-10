@@ -33,14 +33,38 @@ def update_coefficients(x0,p0,x1,p1,x2,p2,x3,p3) :
 def interpolation_Cubique(a,b,c,d,x) :
     return a*x**3 + b*x**2 + c*x + d
 
-# def interpolation_BiCubique(p00,p01,p02, ... ,x,y) :
-#     f = interpolation_Cubique
-#     return f(f(p00,p01,p02,p03,y),
-#              f(p10,p11,p12,p13,y),
-#              f(p20,p21,p22,p23,y),
-#              f(p30,p31,p32,p33,y),x)
+def interpolation_BiCubique(x00, y00, p00,
+                            x01, y01, p01,
+                            x02, y02, p02,
+                            x03, y03, p03,
+                            x10, y10, p10,
+                            x11, y11, p11,
+                            x12, y12, p12,
+                            x13, y13, p13,
+                            x20, y20, p20,
+                            x21, y21, p21,
+                            x22, y22, p22,
+                            x23, y23, p23,
+                            x30, y30, p30,
+                            x31, y31, p31,
+                            x32, y32, p32,
+                            x33, y33, p33,x,y) :
 
+    f = interpolation_Cubique#local alias
 
+    #dev note :
+    # it would be much more optimal to update coefficients outside of this function
+    A0,B0,C0,D0 = update_coefficients(x00,p00,x01,p01,x02,p02,x03,p03)
+    A1,B1,C1,D1 = update_coefficients(x10,p10,x11,p11,x12,p12,x13,p13)
+    A2,B2,C2,D2 = update_coefficients(x20,p20,x21,p21,x22,p22,x23,p23)
+    A3,B3,C3,D3 = update_coefficients(x30,p30,x31,p31,x32,p32,x33,p33)
+    P0 = f(A0,B0,C0,D0,x)
+    P1 = f(A1,B1,C1,D1,x)
+    P2 = f(A2,B2,C2,D2,x)
+    P3 = f(A3,B3,C3,D3,x)
+    A,B,C,D = update_coefficients(y00,P0,y10,P1,y20,P2,y30,P3)
+
+    return f(A,B,C,D,y)
 
 # parameters -------------------------------------------------------------
 
@@ -74,11 +98,6 @@ for j in range(len(Y_new)) :
     interpol_data = np.zeros(data.shape)
     interpol_1d_x = np.zeros(len(X_new))
 
-    A0,B0,C0,D0 = 0.,0.,0.,0.
-    A1,B1,C1,D1 = 0.,0.,0.,0.
-    A2,B2,C2,D2 = 0.,0.,0.,0.
-    A3,B3,C3,D3 = 0.,0.,0.,0.
-    A,B,C,D     = 0.,0.,0.,0.
 
     j_old = 0
     i_old = 0
