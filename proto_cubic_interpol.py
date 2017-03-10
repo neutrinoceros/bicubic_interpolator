@@ -45,10 +45,10 @@ def interpolation_Cubique(a,b,c,d,x) :
 # parameters -------------------------------------------------------------
 
 xwidth  = 10.
-xnb_pts = 8
+xnb_pts = 6
 
 ywidth  = 5.
-ynb_pts = 2
+ynb_pts = 6
 
 X_old = np.linspace(0,xwidth,xnb_pts+1)
 Y_old = np.linspace(0,ywidth,ynb_pts+1)
@@ -56,7 +56,7 @@ Y_old = np.linspace(0,ywidth,ynb_pts+1)
 data_nb_pts = (xnb_pts+1)*(ynb_pts+1)
 data = rd.normal(1,0.1,data_nb_pts).reshape(ynb_pts+1,xnb_pts+1)
 
-X_new = np.linspace(0,xwidth,xnb_pts*2+1)
+X_new = np.linspace(0,xwidth,xnb_pts*4+1)
 Y_new = Y_old
 #Y_new = np.linspace(0,ywidth,ynb_pts*2+1)
 
@@ -70,38 +70,41 @@ ax = fig.gca(projection='3d')
 ax.set_xlabel("x")
 ax.set_ylabel("y")
 
-for j in range(len(Y_new)) : 
+for j in range(len(Y_new)) :
     interpol_data = np.zeros(data.shape)
     interpol_1d_x = np.zeros(len(X_new))
-    A,B,C,D = 0.,0.,0.,0.
+
+    A0,B0,C0,D0 = 0.,0.,0.,0.
+    A1,B1,C1,D1 = 0.,0.,0.,0.
+    A2,B2,C2,D2 = 0.,0.,0.,0.
+    A3,B3,C3,D3 = 0.,0.,0.,0.
+    A,B,C,D     = 0.,0.,0.,0.
+
+    j_old = 0
     i_old = 0
-    #j_old = ??
     # uncomment this when ready to dev border conditions
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     #X0,X1,X2,X3 = x   [i_old-2:i_old+2]
-    #P0,P1,P2,P3 = data[i_old-2:i_old+2]
+    #P0,P1,P2,P3 = data[j_old-2:j_old+2,i_old-2:i_old+2]
     #A,B,C,D     = update_coefficients(X0,P0,X1,P1,X2,P2,X3,P3)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     for i in range(len(X_new)) :
-        update_required = False
+        Xupdate_required = False
         while (X_old[i_old] < X_new[i]) :
             i_old += 1
-            update_required = True
-        # print "j,i,i_old =", j,i,i_old
-        # print "\t X_old[i_old] = ",X_old[i_old], "X_new[i] =", X_new[i]
-        if update_required and i_old > 1 and i_old < xnb_pts :
-            X0,X1,X2,X3 = X_old [i_old-2:i_old+2]
-            P0,P1,P2,P3 = data  [j,i_old-2:i_old+2]
-            A,B,C,D = update_coefficients(X0,P0,X1,P1,X2,P2,X3,P3)
-        if i_old > 1 and i_old < xnb_pts : #forget about the borders for now
-            interpol_1d_x[i] = interpolation_Cubique(A,B,C,D,X_new[i])
+            Xupdate_required = True
+        if i_old > 1 and X_new[i] < X_old[xnb_pts-1] :
+            if Xupdate_required :
+                X0,X1,X2,X3 = X_old [i_old-2:i_old+2]
+                P0,P1,P2,P3 = data  [j,i_old-2:i_old+2]
+                A,B,C,D = update_coefficients(X0,P0,X1,P1,X2,P2,X3,P3)
 
-        #print interpol_1d_x
+            interpol_1d_x[i] = interpolation_Cubique(A,B,C,D,X_new[i])
+        else : #forget about the borders for now
+            pass
     ax.scatter(X_old,Y_old[j]*np.ones(len(X_old)),data[j])
     ax.plot(X_new,Y_new[j]*np.ones(len(X_new)),interpol_1d_x, color='r')
 
 plt.ion();plt.show();plt.ioff();raw_input("press anykey to quit    ")# uncomment for tests purposes
 #plt.savefig("coucou.png")
-
-    
