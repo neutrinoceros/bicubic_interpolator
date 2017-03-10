@@ -4,6 +4,7 @@
 import numpy as np
 from numpy import random as rd
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 # defintions -------------------------------------------------------------
 def update_coefficients(x0,p0,x1,p1,x2,p2,x3,p3) :
@@ -38,37 +39,45 @@ def interpolation_Cubique(a,b,c,d,x) :
 
 
 # script -----------------------------------------------------------------
-N = 10
-x = np.linspace(-1,2,N+1)
-data = rd.normal(1,0.1,N+1)
+fig = plt.figure()
+ax = fig.gca(projection='3d')
 
-nrad = 1000
-refined_x = np.linspace(-1,2,nrad+1)
-interpol_data = np.zeros(nrad+1)
+for j in range(2,4) : 
+    N = 10
+    x = np.linspace(-1,2,N+1)
+    data = rd.normal(1,0.1,N+1)
 
-A,B,C,D = 0.,0.,0.,0.
-i_old = 0
-# uncomment this when ready to dev border conditions
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#X0,X1,X2,X3 = x   [i_old-2:i_old+2]
-#P0,P1,P2,P3 = data[i_old-2:i_old+2]
-#A,B,C,D     = update_coefficients(X0,P0,X1,P1,X2,P2,X3,P3)
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    y = np.ones(len(x)) * j
+    
+    nrad = 1000
+    refined_x = np.linspace(-1,2,nrad+1)
+    #refined_y = np.linspace(-1,2,nrad+1)
+    interpol_data = np.zeros(nrad+1)
 
-for i in range(nrad) :
-    update_required = False
-    while (x[i_old] < refined_x[i]) :
-        i_old += 1
-        update_required = True
-    if update_required and i_old > 1 and i_old < N:
-        X0,X1,X2,X3 = x   [i_old-2:i_old+2]
-        P0,P1,P2,P3 = data[i_old-2:i_old+2]
-        A,B,C,D = update_coefficients(X0,P0,X1,P1,X2,P2,X3,P3)
-    if i_old > 1 and i_old < N : #forget about the borders for now
-        interpol_data[i] = interpolation_Cubique(A,B,C,D,refined_x[i])
+    A,B,C,D = 0.,0.,0.,0.
+    i_old = 0
+    # uncomment this when ready to dev border conditions
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #X0,X1,X2,X3 = x   [i_old-2:i_old+2]
+    #P0,P1,P2,P3 = data[i_old-2:i_old+2]
+    #A,B,C,D     = update_coefficients(X0,P0,X1,P1,X2,P2,X3,P3)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-plt.scatter(x,data)
-plt.plot(refined_x,interpol_data, color='r')
+    for i in range(nrad) :
+        update_required = False
+        while (x[i_old] < refined_x[i]) :
+            i_old += 1
+            update_required = True
+        if update_required and i_old > 1 and i_old < N:
+            X0,X1,X2,X3 = x   [i_old-2:i_old+2]
+            P0,P1,P2,P3 = data[i_old-2:i_old+2]
+            A,B,C,D = update_coefficients(X0,P0,X1,P1,X2,P2,X3,P3)
+        if i_old > 1 and i_old < N : #forget about the borders for now
+            interpol_data[i] = interpolation_Cubique(A,B,C,D,refined_x[i])
+
+    ax.scatter(x,y,data)
+    #ax.plot(refined_x,refined_y,interpol_data, color='r')
+    
 plt.savefig("coucou.png")
 
     
