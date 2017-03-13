@@ -73,10 +73,11 @@ Y_old = np.linspace(0,ywidth,ynb_pts+1)
 data_nb_pts = (xnb_pts+1)*(ynb_pts+1)
 data = rd.normal(1,0.1,data_nb_pts).reshape(ynb_pts+1,xnb_pts+1)
 
-enhance_factor = 2
-X_new = np.linspace(0,xwidth,xnb_pts*enhance_factor+1)
-Y_new = Y_old
-#Y_new = np.linspace(0,ywidth,ynb_pts*2+1)
+x_enhance_factor = 10
+y_enhance_factor = 10
+X_new = np.linspace(0,xwidth,xnb_pts*x_enhance_factor+1)
+#Y_new = Y_old
+Y_new = np.linspace(0,ywidth,ynb_pts*y_enhance_factor+1)
 
 
 # script -----------------------------------------------------------------
@@ -107,7 +108,7 @@ for j in range(len(Y_new)) :
     i_old = 0
     for i in range(len(X_new)) :
         x_new = X_new[i]
-        #print x_new
+#        print i,j, i_old,j_old
         update_required = False
         while (X_old[i_old] < X_new[i]) :
             i_old += 1
@@ -117,12 +118,14 @@ for j in range(len(Y_new)) :
         notAtRadialBorder = j_old > 1 and Y_new[j] < Y_old[ynb_pts-1] 
         if notAtAzimutBorder and notAtRadialBorder: # general case here, excluding the borders
             if update_required :
-                
-                # those are useful to keep track of the steps in the interpolation
-                # so we can plot the 1d interpolated lines at the end
-                X0,X1,X2,X3 = X_old [i_old-2:i_old+2]
-                P0,P1,P2,P3 = data  [j,i_old-2:i_old+2]
-                AA,BB,CC,DD = update_coefficients(X0,P0,X1,P1,X2,P2,X3,P3,AA,BB,CC,DD)
+
+                if j/j_old == y_enhance_factor :
+                    # those are useful to keep track of the steps in the interpolation
+                    # so we can plot the 1d interpolated lines at the end
+                    X0,X1,X2,X3 = X_old [i_old-2:i_old+2]
+                    PP0,PP1,PP2,PP3 = data [j_old,i_old-2:i_old+2]
+                    AA,BB,CC,DD = update_coefficients(X0,PP0,X1,PP1,X2,PP2,X3,PP3,AA,BB,CC,DD)
+                    ax.plot(X_new,y_new*np.ones(len(X_new)),interpol_1d_x, color='r')
 
                 # the routine itself might be written in all generality but in practice
                 # we know we will only use evenly spaced grids IN THETA (aka x here)
@@ -162,43 +165,26 @@ for j in range(len(Y_new)) :
             #                                             x_new,y_new)
             # /////////////////////////////////////////////////////////////////////////////////////// deprecated
             
-
             P0 = tdp(A0,B0,C0,D0,x_new)
             P1 = tdp(A1,B1,C1,D1,x_new)
             P2 = tdp(A2,B2,C2,D2,x_new)
             P3 = tdp(A3,B3,C3,D3,x_new)
-
-            # if i/i_old == enhance_factor :
-            #     print round(P0,10) == round(P02,10)
-            #     print round(P1,10) == round(P12,10)
-            #     print round(P2,10) == round(P22,10)
-            #     print round(P3,10) == round(P32,10)
-            #     print "-------"
-            # debug lines
 
             A,B,C,D = update_coefficients(Y00,P0,Y10,P1,Y20,P2,Y30,P3,A,B,C,D)
             interpol_value = tdp(A,B,C,D,y_new)
             interpol_data[i] = interpol_value
 
             # those lines are used to keep track and debug the process -------------
-            dummy_x = x_new*np.ones(100)
-            dummy_y = np.linspace(0.,ywidth,100)
-            ax.plot(dummy_x,dummy_y,tdp(A,B,C,D,dummy_y),color = 'k', ls = '--')
+            #dummy_x = x_new*np.ones(100)
+            #dummy_y = np.linspace(0.,ywidth,100)
+            #ax.plot(dummy_x,dummy_y,tdp(A,B,C,D,dummy_y),color = 'k', ls = '--')
             # ----------------------------------------------------------------------
 
         else : # forget about the borders for now
             pass
 
-    # try :
-    #     print i_old,j_old
-    #     print X00,X01,X02,X03
-    #     print Y00,Y01,Y02,Y03,Y10,Y11,Y12,Y13
-    # except NameError :
-    #     pass
-    ax.scatter(X_old,Y_old[j]*np.ones(len(X_old)),data[j])
-    ax.plot(X_new,y_new*np.ones(len(X_new)),interpol_1d_x, color='r')
-
-    #ax.plot(X_new,y_new*np.ones(len(X_new)),interpol_data, color='g')#buggy
+    ax.scatter(X_old,Y_old[j_old]*np.ones(len(X_old)),data[j_old])
+    ax.plot(X_new,y_new*np.ones(len(X_new)),interpol_data, color='c', lw=2, ls='-')
 
 plt.ion();plt.show();plt.ioff();raw_input("press anykey to quit    ")# uncomment for tests purposes
 #plt.savefig("coucou.png")
