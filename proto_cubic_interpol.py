@@ -34,6 +34,8 @@ def update_coefficients(x0,p0,x1,p1,x2,p2,x3,p3,a,b,c,d) :
 def third_degree_polynom(a,b,c,d,x) :
     return a*x**3 + b*x**2 + c*x + d
 
+tdp = third_degree_polynom #alias
+
 
 def interpolation_BiCubique(x00,y00,p00, x01,y01,p01, x02,y02,p02, x03,y03,p03,
                             x10,y10,p10, x11,y11,p11, x12,y12,p12, x13,y13,p13,
@@ -59,11 +61,11 @@ def interpolation_BiCubique(x00,y00,p00, x01,y01,p01, x02,y02,p02, x03,y03,p03,
 
 # parameters -------------------------------------------------------------
 
-xwidth  = 5.
+xwidth  = 4.
 xnb_pts = 5
 
-ywidth  = 5.
-ynb_pts = 5
+ywidth  = 3.
+ynb_pts = 4
 
 X_old = np.linspace(0,xwidth,xnb_pts+1)
 Y_old = np.linspace(0,ywidth,ynb_pts+1)
@@ -104,6 +106,8 @@ for j in range(len(Y_new)) :
 
     i_old = 0
     for i in range(len(X_new)) :
+        x_new = X_new[i]
+        #print x_new
         update_required = False
         while (X_old[i_old] < X_new[i]) :
             i_old += 1
@@ -112,7 +116,6 @@ for j in range(len(Y_new)) :
         notAtAzimutBorder = i_old > 1 and X_new[i] < X_old[xnb_pts-1] 
         notAtRadialBorder = j_old > 1 and Y_new[j] < Y_old[ynb_pts-1] 
         if notAtAzimutBorder and notAtRadialBorder: # general case here, excluding the borders
-            x_new = X_new[i]
             if update_required :
                 
                 # those are useful to keep track of the steps in the interpolation
@@ -147,7 +150,7 @@ for j in range(len(Y_new)) :
                 A2,B2,C2,C3 = update_coefficients(X20,P20,X21,P21,X22,P22,X23,P23,A2,B2,C2,D2)
                 A3,B3,C3,D3 = update_coefficients(X30,P30,X31,P31,X32,P32,X33,P33,A3,B3,C3,D3)
 
-            interpol_1d_x[i] = third_degree_polynom(AA,BB,CC,DD,x_new)
+            interpol_1d_x[i] = tdp(AA,BB,CC,DD,x_new)
 
             # this is where magic happens
             # \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -159,21 +162,28 @@ for j in range(len(Y_new)) :
             #                                             x_new,y_new)
             # /////////////////////////////////////////////////////////////////////////////////////// deprecated
             
-            tdp = third_degree_polynom #alias
 
             P0 = tdp(A0,B0,C0,D0,x_new)
             P1 = tdp(A1,B1,C1,D1,x_new)
             P2 = tdp(A2,B2,C2,D2,x_new)
             P3 = tdp(A3,B3,C3,D3,x_new)
 
-            A,B,C,D = update_coefficients(Y00,P0,Y10,P1,Y20,P2,Y30,P3,A,B,C,D)
+            if i/i_old == enhance_factor :
+                print round(P0,10) == round(P02,10)
+                print round(P1,10) == round(P12,10)
+                print round(P2,10) == round(P22,10)
+                print round(P3,10) == round(P32,10)
+                print "-------"
+                A,B,C,D = update_coefficients(Y00,P0,Y10,P1,Y20,P2,Y30,P3,A,B,C,D)
             interpol_value = tdp(A,B,C,D,y_new)
             interpol_data[i] = interpol_value
 
-            #those line are used to keep track and debug the process
+            # those lines are used to keep track and debug the process -------------
             dummy_x = x_new*np.ones(100)
             dummy_y = np.linspace(0.,ywidth,100)
             ax.plot(dummy_x,dummy_y,tdp(A,B,C,D,dummy_y),color = 'k', ls = '--')
+            # ----------------------------------------------------------------------
+
         else : # forget about the borders for now
             pass
 
