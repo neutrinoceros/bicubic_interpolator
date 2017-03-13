@@ -54,16 +54,16 @@ def interpolation_BiCubique(x00,y00,p00, x01,y01,p01, x02,y02,p02, x03,y03,p03,
     # this is a dummy update and should not affect A,B,C,D in the python script
     a,b,c,d = update_coefficients(y00,p0,y10,p1,y20,p2,y30,p3,a,b,c,d)
 
-    return f(A,B,C,D,y)
+    return f(a,b,c,d,y)
 
 
 # parameters -------------------------------------------------------------
 
-xwidth  = 10.
-xnb_pts = 6
+xwidth  = 5.
+xnb_pts = 5
 
 ywidth  = 5.
-ynb_pts = 6
+ynb_pts = 5
 
 X_old = np.linspace(0,xwidth,xnb_pts+1)
 Y_old = np.linspace(0,ywidth,ynb_pts+1)
@@ -71,9 +71,11 @@ Y_old = np.linspace(0,ywidth,ynb_pts+1)
 data_nb_pts = (xnb_pts+1)*(ynb_pts+1)
 data = rd.normal(1,0.1,data_nb_pts).reshape(ynb_pts+1,xnb_pts+1)
 
-X_new = np.linspace(0,xwidth,xnb_pts*4+1)
+enhance_factor = 2
+X_new = np.linspace(0,xwidth,xnb_pts*enhance_factor+1)
 Y_new = Y_old
 #Y_new = np.linspace(0,ywidth,ynb_pts*2+1)
+
 
 # script -----------------------------------------------------------------
 
@@ -82,17 +84,18 @@ ax = fig.gca(projection='3d')
 ax.set_xlabel("x")
 ax.set_ylabel("y")
 
-A =B =C =D =0.
+AA=BB=CC=DD=0.
 A0=B0=C0=D0=0.
 A1=B1=C1=D1=0.
 A2=B2=C2=D2=0.
 A3=B3=C3=D3=0.
-
+A =B =C =D =0.
 
 j_old = 0
 for j in range(len(Y_new)) :
+    y_new = Y_new[j]
     # (re)init interpolated data
-    interpol_data = np.zeros(data.shape)
+    interpol_data = np.zeros(len(X_new))
     interpol_1d_x = np.zeros(len(X_new))
 
     # update y index
@@ -109,13 +112,14 @@ for j in range(len(Y_new)) :
         notAtAzimutBorder = i_old > 1 and X_new[i] < X_old[xnb_pts-1] 
         notAtRadialBorder = j_old > 1 and Y_new[j] < Y_old[ynb_pts-1] 
         if notAtAzimutBorder and notAtRadialBorder: # general case here, excluding the borders
+            x_new = X_new[i]
             if update_required :
                 
                 # those are useful to keep track of the steps in the interpolation
                 # so we can plot the 1d interpolated lines at the end
                 X0,X1,X2,X3 = X_old [i_old-2:i_old+2]
                 P0,P1,P2,P3 = data  [j,i_old-2:i_old+2]
-                A,B,C,D = update_coefficients(X0,P0,X1,P1,X2,P2,X3,P3,A,B,C,D)
+                AA,BB,CC,DD = update_coefficients(X0,P0,X1,P1,X2,P2,X3,P3,AA,BB,CC,DD)
 
                 # the routine itself might be written in all generality but in practice
                 # we know we will only use evenly spaced grids IN THETA (aka x here)
@@ -143,20 +147,46 @@ for j in range(len(Y_new)) :
                 A2,B2,C2,C3 = update_coefficients(X20,P20,X21,P21,X22,P22,X23,P23,A2,B2,C2,D2)
                 A3,B3,C3,D3 = update_coefficients(X30,P30,X31,P31,X32,P32,X33,P33,A3,B3,C3,D3)
 
-            # this is where magic happens
-            interpolated_data = interpolation_BiCubique(X00,Y00,P00, X01,Y01,P01, X02,Y02,P02, X03,Y03,P03,
-                                                        X10,Y10,P10, X11,Y11,P11, X12,Y12,P12, X13,Y13,P13,
-                                                        X20,Y20,P20, X21,Y21,P21, X22,Y22,P22, X23,Y23,P23,
-                                                        X30,Y30,P30, X31,Y31,P31, X32,Y32,P32, X33,Y33,P33,
-                                                        A0,B0,C0,D0,A1,B1,C1,D1,A2,B2,C2,D2,A3,B3,C3,D3,A,B,C,D,
-                                                        X_new[i],Y_new[j])
+            interpol_1d_x[i] = third_degree_polynom(AA,BB,CC,DD,x_new)
 
-            interpol_1d_x[i] = third_degree_polynom(A,B,C,D,X_new[i])
+            # this is where magic happens
+            # \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+            # interpol_data[i] = interpolation_BiCubique(X00,Y00,P00, X01,Y01,P01, X02,Y02,P02, X03,Y03,P03,
+            #                                             X10,Y10,P10, X11,Y11,P11, X12,Y12,P12, X13,Y13,P13,
+            #                                             X20,Y20,P20, X21,Y21,P21, X22,Y22,P22, X23,Y23,P23,
+            #                                             X30,Y30,P30, X31,Y31,P31, X32,Y32,P32, X33,Y33,P33,
+            #                                             A0,B0,C0,D0,A1,B1,C1,D1,A2,B2,C2,D2,A3,B3,C3,D3,A,B,C,D,
+            #                                             x_new,y_new)
+            # /////////////////////////////////////////////////////////////////////////////////////// deprecated
             
+            tdp = third_degree_polynom #alias
+
+            P0 = tdp(A0,B0,C0,D0,x_new)
+            P1 = tdp(A1,B1,C1,D1,x_new)
+            P2 = tdp(A2,B2,C2,D2,x_new)
+            P3 = tdp(A3,B3,C3,D3,x_new)
+
+            A,B,C,D = update_coefficients(Y00,P0,Y10,P1,Y20,P2,Y30,P3,A,B,C,D)
+            interpol_value = tdp(A,B,C,D,y_new)
+            interpol_data[i] = interpol_value
+
+            #those line are used to keep track and debug the process
+            dummy_x = x_new*np.ones(100)
+            dummy_y = np.linspace(0.,ywidth,100)
+            ax.plot(dummy_x,dummy_y,tdp(A,B,C,D,dummy_y),color = 'k', ls = '--')
         else : # forget about the borders for now
             pass
+
+    # try :
+    #     print i_old,j_old
+    #     print X00,X01,X02,X03
+    #     print Y00,Y01,Y02,Y03,Y10,Y11,Y12,Y13
+    # except NameError :
+    #     pass
     ax.scatter(X_old,Y_old[j]*np.ones(len(X_old)),data[j])
-    ax.plot(X_new,Y_new[j]*np.ones(len(X_new)),interpol_1d_x, color='r')
+    ax.plot(X_new,y_new*np.ones(len(X_new)),interpol_1d_x, color='r')
+
+    #ax.plot(X_new,y_new*np.ones(len(X_new)),interpol_data, color='g')#buggy
 
 plt.ion();plt.show();plt.ioff();raw_input("press anykey to quit    ")# uncomment for tests purposes
 #plt.savefig("coucou.png")
