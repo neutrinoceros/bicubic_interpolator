@@ -37,35 +37,13 @@ def third_degree_polynom(a,b,c,d,x) :
 tdp = third_degree_polynom #alias
 
 
-def interpolation_BiCubique(x00,y00,p00, x01,y01,p01, x02,y02,p02, x03,y03,p03,
-                            x10,y10,p10, x11,y11,p11, x12,y12,p12, x13,y13,p13,
-                            x20,y20,p20, x21,y21,p21, x22,y22,p22, x23,y23,p23,
-                            x30,y30,p30, x31,y31,p31, x32,y32,p32, x33,y33,p33,
-                            a0,b0,c0,d0,a1,b1,c1,d1,a2,b2,c2,d2,a3,b3,c3,d3,a,b,c,d,
-                            x,y):
-    # dev note : revise how exactly the functions should be entangled
-    # and try and reduce the number of arguments used here
-    
-    f = third_degree_polynom #local alias
-
-    p0 = f(a0,b0,c0,d0,x)
-    p1 = f(a1,b1,c1,d1,x)
-    p2 = f(a2,b2,c2,d2,x)
-    p3 = f(a3,b3,c3,d3,x)
-
-    # this is a dummy update and should not affect A,B,C,D in the python script
-    a,b,c,d = update_coefficients(y00,p0,y10,p1,y20,p2,y30,p3,a,b,c,d)
-
-    return f(a,b,c,d,y)
-
-
 # parameters -------------------------------------------------------------
 
-xwidth  = 4.
-xnb_pts = 5
+xwidth  = 10.
+xnb_pts = 10
 
-ywidth  = 3.
-ynb_pts = 4
+ywidth  = 10.
+ynb_pts = 10
 
 X_old = np.linspace(0,xwidth,xnb_pts+1)
 Y_old = np.linspace(0,ywidth,ynb_pts+1)
