@@ -147,7 +147,7 @@ for j in range(len(Y_new)) :
                 # finally, update all the coefficients
                 A0,B0,C0,D0 = update_coefficients(X00,P00,X01,P01,X02,P02,X03,P03,A0,B0,C0,D0)
                 A1,B1,C1,D1 = update_coefficients(X10,P10,X11,P11,X12,P12,X13,P13,A1,B1,C1,D1)
-                A2,B2,C2,C3 = update_coefficients(X20,P20,X21,P21,X22,P22,X23,P23,A2,B2,C2,D2)
+                A2,B2,C2,D2 = update_coefficients(X20,P20,X21,P21,X22,P22,X23,P23,A2,B2,C2,D2)
                 A3,B3,C3,D3 = update_coefficients(X30,P30,X31,P31,X32,P32,X33,P33,A3,B3,C3,D3)
 
             interpol_1d_x[i] = tdp(AA,BB,CC,DD,x_new)
@@ -168,13 +168,15 @@ for j in range(len(Y_new)) :
             P2 = tdp(A2,B2,C2,D2,x_new)
             P3 = tdp(A3,B3,C3,D3,x_new)
 
-            if i/i_old == enhance_factor :
-                print round(P0,10) == round(P02,10)
-                print round(P1,10) == round(P12,10)
-                print round(P2,10) == round(P22,10)
-                print round(P3,10) == round(P32,10)
-                print "-------"
-                A,B,C,D = update_coefficients(Y00,P0,Y10,P1,Y20,P2,Y30,P3,A,B,C,D)
+            # if i/i_old == enhance_factor :
+            #     print round(P0,10) == round(P02,10)
+            #     print round(P1,10) == round(P12,10)
+            #     print round(P2,10) == round(P22,10)
+            #     print round(P3,10) == round(P32,10)
+            #     print "-------"
+            # debug lines
+
+            A,B,C,D = update_coefficients(Y00,P0,Y10,P1,Y20,P2,Y30,P3,A,B,C,D)
             interpol_value = tdp(A,B,C,D,y_new)
             interpol_data[i] = interpol_value
 
