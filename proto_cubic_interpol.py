@@ -76,7 +76,6 @@ data = rd.normal(1,0.1,data_nb_pts).reshape(ynb_pts+1,xnb_pts+1)
 x_enhance_factor = 10
 y_enhance_factor = 10
 X_new = np.linspace(0,xwidth,xnb_pts*x_enhance_factor+1)
-#Y_new = Y_old
 Y_new = np.linspace(0,ywidth,ynb_pts*y_enhance_factor+1)
 
 
@@ -108,7 +107,6 @@ for j in range(len(Y_new)) :
     i_old = 0
     for i in range(len(X_new)) :
         x_new = X_new[i]
-#        print i,j, i_old,j_old
         update_required = False
         while (X_old[i_old] < X_new[i]) :
             i_old += 1
@@ -156,15 +154,6 @@ for j in range(len(Y_new)) :
             interpol_1d_x[i] = tdp(AA,BB,CC,DD,x_new)
 
             # this is where magic happens
-            # \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-            # interpol_data[i] = interpolation_BiCubique(X00,Y00,P00, X01,Y01,P01, X02,Y02,P02, X03,Y03,P03,
-            #                                             X10,Y10,P10, X11,Y11,P11, X12,Y12,P12, X13,Y13,P13,
-            #                                             X20,Y20,P20, X21,Y21,P21, X22,Y22,P22, X23,Y23,P23,
-            #                                             X30,Y30,P30, X31,Y31,P31, X32,Y32,P32, X33,Y33,P33,
-            #                                             A0,B0,C0,D0,A1,B1,C1,D1,A2,B2,C2,D2,A3,B3,C3,D3,A,B,C,D,
-            #                                             x_new,y_new)
-            # /////////////////////////////////////////////////////////////////////////////////////// deprecated
-            
             P0 = tdp(A0,B0,C0,D0,x_new)
             P1 = tdp(A1,B1,C1,D1,x_new)
             P2 = tdp(A2,B2,C2,D2,x_new)
