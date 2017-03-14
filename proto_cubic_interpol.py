@@ -101,8 +101,6 @@ for i in range(len(Y_new)) :
                     # those are useful to keep track of the steps in the interpolation
                     # so we can plot the 1d interpolated lines at the end
                     X0,X1,X2,X3 = X_old [j_old-2:j_old+2]
-                    #print np.around(data [i_old,j_old-2:j_old+2], decimals=10) ==  np.around(data1d[i_old*(xnb_pts+1) + j_old-2 : i_old*(xnb_pts+1) + j_old+2], decimals = 10)
-                    #PP0,PP1,PP2,PP3 = data [i_old,j_old-2:j_old+2]
                     PP0,PP1,PP2,PP3 = data1d[i_old*(xnb_pts+1) + j_old-2 : i_old*(xnb_pts+1) + j_old+2]
 
                     AA,BB,CC,DD = update_coefficients(X0,PP0,X1,PP1,X2,PP2,X3,PP3,AA,BB,CC,DD)
