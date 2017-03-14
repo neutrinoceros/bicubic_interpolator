@@ -54,27 +54,6 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
     elif j_old == 1 :# cas 1
         # seed        = xnb_pts-1
         # s0,s1,s2,s3 = seed,0,1,2
-
-        # l         = s0 + (i_old-2)*xnb_pts
-        # lip       = l +   xnb_pts
-        # lipp      = l + 2*xnb_pts
-        # lippp     = l + 3*xnb_pts
-        # ljp       = (i_old-2)*xnb_pts
-        # ljpp      = ljp+1
-        # ljppp     = ljp+2
-
-        # lipjp     = ljp + (i_old-2)*xnb_pts
-        # lipjpp    = lipjp+1
-        # lipjppp   = lipjp+2
-
-        # lippjp    = ljp + 2*(i_old-2)*xnb_pts
-        # lippjpp   = lippjp+1
-        # lippjppp  = lippjp+2
-
-        # lipppjp   = ljp + 3*(i_old-2)*xnb_pts
-        # lipppjpp  = lipppjp+1
-        # lipppjppp = lipppjp+2
-
         goOn = False
 
     elif j_old == xnb_pts-1 :# cas 2
