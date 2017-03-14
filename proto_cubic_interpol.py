@@ -41,10 +41,10 @@ tdp = third_degree_polynom #alias
 # parameters -------------------------------------------------------------
 
 xwidth  = 10.
-xnb_pts = 11
+xnb_pts = 7
 
 ywidth  = 10.
-ynb_pts = 11
+ynb_pts = 4
 
 X_old = np.linspace(0,xwidth,xnb_pts)
 Y_old = np.linspace(0,ywidth,ynb_pts)
@@ -97,39 +97,74 @@ for i in range(len(Y_new)) :
         while (X_old[j_old] < X_new[j]) :
             j_old += 1
             update_required = True
-            
+
+
+        seed = j_old-2
+        s0,s1,s2,s3 = seed,seed+1,seed+2,seed+3
+        # ---------------------------------------
+        # default values for indexes
+        l         = s0 + (i_old-2)*xnb_pts
+        lip       = l +   xnb_pts
+        lipp      = l + 2*xnb_pts
+        lippp     = l + 3*xnb_pts
+        ljp       = l + 1
+        ljpp      = l + 2
+        ljppp     = l + 3
+        lipjp     = lip+1
+        lipjpp    = lip+2
+        lipjppp   = lip+3
+        lippjp    = lipp+1
+        lippjpp   = lipp+2
+        lippjppp  = lipp+3
+        lipppjp   = lippp+1
+        lipppjpp  = lippp+2
+        lipppjppp = lippp+3
+        # ---------------------------------------
+
         atAzimutBorder = j_old <= 1 or X_new[j] >= X_old[xnb_pts-2]
         atRadialBorder = i_old <= 1 or Y_new[i] >= Y_old[ynb_pts-2]
+
         if   atRadialBorder :
             goOn = False
-        # cases where we're near a azimuthal "border"
+
+        # cases where we're near an azimuthal "border"
         elif j_old == 0 :# cas 3
             goOn = False
         elif j_old == 1 :# cas 1
+            # seed        = xnb_pts-1
+            # s0,s1,s2,s3 = seed,0,1,2
+
+            # l         = s0 + (i_old-2)*xnb_pts
+            # lip       = l +   xnb_pts
+            # lipp      = l + 2*xnb_pts
+            # lippp     = l + 3*xnb_pts
+            # ljp       = (i_old-2)*xnb_pts
+            # ljpp      = ljp+1
+            # ljppp     = ljp+2
+
+            # lipjp     = ljp + (i_old-2)*xnb_pts
+            # lipjpp    = lipjp+1
+            # lipjppp   = lipjp+2
+
+            # lippjp    = ljp + 2*(i_old-2)*xnb_pts
+            # lippjpp   = lippjp+1
+            # lippjppp  = lippjp+2
+
+            # lipppjp   = ljp + 3*(i_old-2)*xnb_pts
+            # lipppjpp  = lipppjp+1
+            # lipppjppp = lipppjp+2
+
             goOn = False
+
         elif j_old == xnb_pts-1 :# cas 2
             goOn = False
         elif X_new[j] > X_old[xnb_pts-1] : # cas 3 also, ignore
+            # pas censé être possible....
             goOn = False
-        else :
-            l         = j_old-2 + (i_old-2)*xnb_pts
-            lip       = l +   xnb_pts
-            lipp      = l + 2*xnb_pts
-            lippp     = l + 3*xnb_pts
-            ljp       = l + 1
-            ljpp      = l + 2
-            ljppp     = l + 3
-            lipjp     = lip+1
-            lipjpp    = lip+2
-            lipjppp   = lip+3
-            lippjp    = lipp+1
-            lippjpp   = lipp+2
-            lippjppp  = lipp+3
-            lipppjp   = lippp+1
-            lipppjpp  = lippp+2
-            lipppjppp = lippp+3
-
+        else : # default case : not near any border
             goOn = True
+
+
         if goOn :# à terme, ce niveau d'indentation doit être supprimé
             if update_required :
                 #-----------------------------------------------------------------------------------------------
@@ -156,7 +191,7 @@ for i in range(len(Y_new)) :
                 X00,X01,X02,X03 = \
                 X10,X11,X12,X13 = \
                 X20,X21,X22,X23 = \
-                X30,X31,X32,X33 = X_old [j_old-2], X_old [j_old-1], X_old [j_old], X_old [j_old+1]
+                X30,X31,X32,X33 = X_old [s0], X_old [s1], X_old [s2], X_old [s3]
 
                 # however, we don't enconter any concerning issue with log-spaced
                 # radial grids but the syntax ought to be different
