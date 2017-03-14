@@ -108,9 +108,12 @@ for i in range(len(Y_new)) :
             goOn = False
         else :
             l    = j_old-2 + (i_old-2)*(xnb_pts+1)
-            lip  = j_old-2 + (i_old-1)*(xnb_pts+1)
-            lipp = j_old-2 + (i_old  )*(xnb_pts+1)
-            lippp= j_old-2 + (i_old+1)*(xnb_pts+1)
+            lip  = l + 1*(xnb_pts+1)
+            lipp = l + 2*(xnb_pts+1)
+            lippp= l + 3*(xnb_pts+1)
+            ljp  = l + 1
+            ljpp = l + 2
+            ljppp= l + 3
             goOn = True
         if goOn :# à terme, ce niveau d'indentation doit être supprimé
             if update_required :
@@ -150,7 +153,7 @@ for i in range(len(Y_new)) :
                 Y30=Y31=Y32=Y33 = Y_old [i_old+1]
 
                 # field values
-                P00,P01,P02,P03 = data1d[l    :l    +4]
+                P00,P01,P02,P03 = data1d[l],data1d[ljp],data1d[ljpp], data1d[ljppp]
                 P10,P11,P12,P13 = data1d[lip  :lip  +4]
                 P20,P21,P22,P23 = data1d[lipp :lipp +4]
                 P30,P31,P32,P33 = data1d[lippp:lippp+4]
