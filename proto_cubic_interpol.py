@@ -102,7 +102,9 @@ for i in range(len(Y_new)) :
         atRadialBorder = i_old <= 1 or Y_new[i] >= Y_old[ynb_pts-1]
         if   atRadialBorder :
             goOn = False
-        elif atAzimutBorder :
+        elif j_old == 0 :
+            goOn = False
+        elif X_new[j] >= X_old[xnb_pts-1] :
             goOn = False
         else :
             l = j_old-2
