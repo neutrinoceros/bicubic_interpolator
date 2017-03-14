@@ -40,10 +40,10 @@ tdp = third_degree_polynom #alias
 # parameters -------------------------------------------------------------
 
 xwidth  = 10.
-xnb_pts = 7
+xnb_pts = 8
 
 ywidth  = 10.
-ynb_pts = 7
+ynb_pts = 8
 
 X_old = np.linspace(0,xwidth,xnb_pts+1)
 Y_old = np.linspace(0,ywidth,ynb_pts+1)
@@ -153,7 +153,7 @@ for i in range(len(Y_new)) :
         else : # forget about the borders for now
             pass
 
-    ax.scatter(X_old,Y_old[i_old]*np.ones(len(X_old)),data[i_old])
+    ax.scatter(X_old,Y_old[i_old]*np.ones(len(X_old)),data1d[i_old*(xnb_pts+1) : (i_old+1)*(xnb_pts+1)])
     ax.plot(X_new,y_new*np.ones(len(X_new)),interpol_data, color='c', lw=2, ls='-')
 
 plt.ion();plt.show();plt.ioff();raw_input("press anykey to quit    ")# uncomment for tests purposes
