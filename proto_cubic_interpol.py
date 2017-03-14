@@ -102,12 +102,15 @@ for i in range(len(Y_new)) :
         atRadialBorder = i_old <= 1 or Y_new[i] >= Y_old[ynb_pts-1]
         if   atRadialBorder :
             goOn = False
-        elif j_old == 0 :
+        elif j_old < 2 :
             goOn = False
         elif X_new[j] >= X_old[xnb_pts-1] :
             goOn = False
         else :
-            l = j_old-2
+            l    = j_old-2 + (i_old-2)*(xnb_pts+1)
+            lip  = j_old-2 + (i_old-1)*(xnb_pts+1)
+            lipp = j_old-2 + (i_old  )*(xnb_pts+1)
+            lippp= j_old-2 + (i_old+1)*(xnb_pts+1)
             goOn = True
         if goOn :# à terme, ce niveau d'indentation doit être supprimé
             if update_required :
@@ -115,18 +118,18 @@ for i in range(len(Y_new)) :
                 # those are useful to keep track of the steps in the interpolation so we can plot the 1d
                 # interpolated lines at the end.
                 # The try/except structure are used to avoid dealing with borders here
-                try :
-                    if i/i_old == y_enhance_factor :
-                        try :
-                            X0,X1,X2,X3 = X_old [j_old-2:j_old+2]
-                            PP0,PP1,PP2,PP3 = data1d[i_old*(xnb_pts+1) + j_old-2 : i_old*(xnb_pts+1) + j_old+2]
-                            AA,BB,CC,DD = update_coefficients(X0,PP0,X1,PP1,X2,PP2,X3,PP3,AA,BB,CC,DD)
-                            #ax.plot(X_new,y_new*np.ones(len(X_new)),interpol_1d_x, color='r')
-                        except ValueError :
-                            pass
+                # try :
+                #     if i/i_old == y_enhance_factor :
+                #         try :
+                #             X0,X1,X2,X3 = X_old [j_old-2:j_old+2]
+                #             PP0,PP1,PP2,PP3 = data1d[i_old*(xnb_pts+1) + j_old-2 : i_old*(xnb_pts+1) + j_old+2]
+                #             AA,BB,CC,DD = update_coefficients(X0,PP0,X1,PP1,X2,PP2,X3,PP3,AA,BB,CC,DD)
+                #             #ax.plot(X_new,y_new*np.ones(len(X_new)),interpol_1d_x, color='r')
+                #         except ValueError :
+                #             pass
 
-                except ZeroDivisionError :
-                    pass
+                # except ZeroDivisionError :
+                #     pass
                 #-----------------------------------------------------------------------------------------------
 
 
@@ -135,8 +138,9 @@ for i in range(len(Y_new)) :
                 X00,X01,X02,X03 = \
                 X10,X11,X12,X13 = \
                 X20,X21,X22,X23 = \
-                X30,X31,X32,X33 = X_old [l:l+4]
+                X30,X31,X32,X33 = X_old [j_old-2], X_old [j_old-1], X_old [j_old], X_old [j_old+1]
                 #X30,X31,X32,X33 = X_old [j_old-2:j_old+2]
+                #print X_old [l], X_old [ljp], X_old [ljpp], X_old [ljppp], X_old [j_old-2:j_old+2]
 
                 # however, we don't enconter any concerning issue with log-spaced
                 # radial grids but the syntax ought to be different
@@ -146,10 +150,10 @@ for i in range(len(Y_new)) :
                 Y30=Y31=Y32=Y33 = Y_old [i_old+1]
 
                 # field values
-                P00,P01,P02,P03 = data1d[(i_old-2)*(xnb_pts+1) + l : (i_old-2)*(xnb_pts+1) + l+4]
-                P10,P11,P12,P13 = data1d[(i_old-1)*(xnb_pts+1) + l : (i_old-1)*(xnb_pts+1) + l+4]
-                P20,P21,P22,P23 = data1d[(i_old  )*(xnb_pts+1) + l : (i_old  )*(xnb_pts+1) + l+4]
-                P30,P31,P32,P33 = data1d[(i_old+1)*(xnb_pts+1) + l : (i_old+1)*(xnb_pts+1) + l+4]
+                P00,P01,P02,P03 = data1d[l    :l    +4]
+                P10,P11,P12,P13 = data1d[lip  :lip  +4]
+                P20,P21,P22,P23 = data1d[lipp :lipp +4]
+                P30,P31,P32,P33 = data1d[lippp:lippp+4]
 
                 # finally, update all the coefficients
                 A0,B0,C0,D0 = update_coefficients(X00,P00,X01,P01,X02,P02,X03,P03,A0,B0,C0,D0)
