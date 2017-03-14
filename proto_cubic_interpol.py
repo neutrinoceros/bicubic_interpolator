@@ -51,13 +51,14 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
     # cases where we're near an azimuthal "border"
     elif j_old == 0 :# cas 3
         goOn = False
-    elif j_old == 1 :# cas 1
+    elif j_old == 1 : # cas 1
         seed        = xnb_pts-1
         s0,s1,s2,s3 = seed,0,1,2
         goOn = True
-
-    elif j_old == xnb_pts-1 :# cas 2
-        goOn = False
+    elif j_old == xnb_pts-1 : # cas 2
+        seed        = xnb_pts-2
+        s0,s1,s2,s3 = xnb_pts-2,xnb_pts-1,0,1
+        goOn = True
     elif X_new[j] > X_old[xnb_pts-1] : # cas 3 also, ignore
         # pas censé être possible....
         goOn = False
@@ -117,10 +118,10 @@ data_nb_pts = xnb_pts*ynb_pts
 data1d = rd.normal(1,0.1,data_nb_pts)
 
 
-x_enhance_factor = 3
-y_enhance_factor = 3
-X_new = np.linspace(0,xwidth,xnb_pts*x_enhance_factor)
-Y_new = np.linspace(0,ywidth,ynb_pts*y_enhance_factor)
+x_enhance_factor = 2
+y_enhance_factor = 2
+X_new = np.linspace(0,xwidth,xnb_pts*x_enhance_factor-1)
+Y_new = np.linspace(0,ywidth,ynb_pts*y_enhance_factor-1)
 
 
 # script -----------------------------------------------------------------
