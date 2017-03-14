@@ -91,9 +91,9 @@ for i in range(len(Y_new)) :
             j_old += 1
             update_required = True
             
-        notAtAzimutBorder = j_old > 1 and X_new[j] < X_old[xnb_pts-1]
-        notAtRadialBorder = i_old > 1 and Y_new[i] < Y_old[ynb_pts-1]
-        if notAtAzimutBorder and notAtRadialBorder: # general case here, excluding the borders
+        atAzimutBorder = j_old <= 1 or X_new[j] >= X_old[xnb_pts-1]
+        atRadialBorder = i_old <= 1 or Y_new[i] >= Y_old[ynb_pts-1]
+        if not atAzimutBorder and not atRadialBorder: # general case here, excluding the borders
             if update_required :
 
                 if i/i_old == y_enhance_factor :
