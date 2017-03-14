@@ -40,10 +40,10 @@ tdp = third_degree_polynom #alias
 # parameters -------------------------------------------------------------
 
 xwidth  = 10.
-xnb_pts = 10
+xnb_pts = 5
 
 ywidth  = 10.
-ynb_pts = 10
+ynb_pts = 5
 
 X_old = np.linspace(0,xwidth,xnb_pts+1)
 Y_old = np.linspace(0,ywidth,ynb_pts+1)
@@ -71,35 +71,35 @@ A2=B2=C2=D2=0.
 A3=B3=C3=D3=0.
 A =B =C =D =0.
 
-j_old = 0
-for j in range(len(Y_new)) :
-    y_new = Y_new[j]
+i_old = 0
+for i in range(len(Y_new)) :
+    y_new = Y_new[i]
     # (re)init interpolated data
     interpol_data = np.zeros(len(X_new))
     interpol_1d_x = np.zeros(len(X_new))
 
     # update y index
-    while (Y_old[j_old] < Y_new[j]) :
-        j_old += 1
+    while (Y_old[i_old] < Y_new[i]) :
+        i_old += 1
 
-    i_old = 0
-    for i in range(len(X_new)) :
-        x_new = X_new[i]
+    j_old = 0
+    for j in range(len(X_new)) :
+        x_new = X_new[j]
         update_required = False
-        while (X_old[i_old] < X_new[i]) :
-            i_old += 1
+        while (X_old[j_old] < X_new[j]) :
+            j_old += 1
             update_required = True
             
-        notAtAzimutBorder = i_old > 1 and X_new[i] < X_old[xnb_pts-1] 
-        notAtRadialBorder = j_old > 1 and Y_new[j] < Y_old[ynb_pts-1] 
+        notAtAzimutBorder = j_old > 1 and X_new[j] < X_old[xnb_pts-1]
+        notAtRadialBorder = i_old > 1 and Y_new[i] < Y_old[ynb_pts-1]
         if notAtAzimutBorder and notAtRadialBorder: # general case here, excluding the borders
             if update_required :
 
-                if j/j_old == y_enhance_factor :
+                if i/i_old == y_enhance_factor :
                     # those are useful to keep track of the steps in the interpolation
                     # so we can plot the 1d interpolated lines at the end
-                    X0,X1,X2,X3 = X_old [i_old-2:i_old+2]
-                    PP0,PP1,PP2,PP3 = data [j_old,i_old-2:i_old+2]
+                    X0,X1,X2,X3 = X_old [j_old-2:j_old+2]
+                    PP0,PP1,PP2,PP3 = data [i_old,j_old-2:j_old+2]
                     AA,BB,CC,DD = update_coefficients(X0,PP0,X1,PP1,X2,PP2,X3,PP3,AA,BB,CC,DD)
                     ax.plot(X_new,y_new*np.ones(len(X_new)),interpol_1d_x, color='r')
 
@@ -108,20 +108,20 @@ for j in range(len(Y_new)) :
                 X00,X01,X02,X03 = \
                 X10,X11,X12,X13 = \
                 X20,X21,X22,X23 = \
-                X30,X31,X32,X33 = X_old [i_old-2:i_old+2]
+                X30,X31,X32,X33 = X_old [j_old-2:j_old+2]
 
                 # however, we don't enconter any concerning issue with log-spaced
                 # radial grids but the syntax ought to be different
-                Y00=Y01=Y02=Y03 = Y_old [j_old-2]
-                Y10=Y11=Y12=Y13 = Y_old [j_old-1]
-                Y20=Y21=Y22=Y23 = Y_old [j_old  ]
-                Y30=Y31=Y32=Y33 = Y_old [j_old+1]
+                Y00=Y01=Y02=Y03 = Y_old [i_old-2]
+                Y10=Y11=Y12=Y13 = Y_old [i_old-1]
+                Y20=Y21=Y22=Y23 = Y_old [i_old  ]
+                Y30=Y31=Y32=Y33 = Y_old [i_old+1]
 
                 # field values
-                P00,P01,P02,P03 = data  [j_old-2, i_old-2:i_old+2]
-                P10,P11,P12,P13 = data  [j_old-1, i_old-2:i_old+2]
-                P20,P21,P22,P23 = data  [j_old  , i_old-2:i_old+2]
-                P30,P31,P32,P33 = data  [j_old+1, i_old-2:i_old+2]
+                P00,P01,P02,P03 = data  [i_old-2, j_old-2:j_old+2]
+                P10,P11,P12,P13 = data  [i_old-1, j_old-2:j_old+2]
+                P20,P21,P22,P23 = data  [i_old  , j_old-2:j_old+2]
+                P30,P31,P32,P33 = data  [i_old+1, j_old-2:j_old+2]
 
                 # finally, update all the coefficients
                 A0,B0,C0,D0 = update_coefficients(X00,P00,X01,P01,X02,P02,X03,P03,A0,B0,C0,D0)
@@ -129,7 +129,7 @@ for j in range(len(Y_new)) :
                 A2,B2,C2,D2 = update_coefficients(X20,P20,X21,P21,X22,P22,X23,P23,A2,B2,C2,D2)
                 A3,B3,C3,D3 = update_coefficients(X30,P30,X31,P31,X32,P32,X33,P33,A3,B3,C3,D3)
 
-            interpol_1d_x[i] = tdp(AA,BB,CC,DD,x_new)
+            interpol_1d_x[j] = tdp(AA,BB,CC,DD,x_new)
 
             # this is where magic happens
             P0 = tdp(A0,B0,C0,D0,x_new)
@@ -139,7 +139,7 @@ for j in range(len(Y_new)) :
 
             A,B,C,D = update_coefficients(Y00,P0,Y10,P1,Y20,P2,Y30,P3,A,B,C,D)
             interpol_value = tdp(A,B,C,D,y_new)
-            interpol_data[i] = interpol_value
+            interpol_data[j] = interpol_value
 
             # those lines are used to keep track and debug the process -------------
             #dummy_x = x_new*np.ones(100)
@@ -150,7 +150,7 @@ for j in range(len(Y_new)) :
         else : # forget about the borders for now
             pass
 
-    ax.scatter(X_old,Y_old[j_old]*np.ones(len(X_old)),data[j_old])
+    ax.scatter(X_old,Y_old[i_old]*np.ones(len(X_old)),data[i_old])
     ax.plot(X_new,y_new*np.ones(len(X_new)),interpol_data, color='c', lw=2, ls='-')
 
 plt.ion();plt.show();plt.ioff();raw_input("press anykey to quit    ")# uncomment for tests purposes
