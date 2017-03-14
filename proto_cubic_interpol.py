@@ -49,10 +49,11 @@ X_old = np.linspace(0,xwidth,xnb_pts+1)
 Y_old = np.linspace(0,ywidth,ynb_pts+1)
 
 data_nb_pts = (xnb_pts+1)*(ynb_pts+1)
-data = rd.normal(1,0.1,data_nb_pts).reshape(ynb_pts+1,xnb_pts+1)
+data1d = rd.normal(1,0.1,data_nb_pts)
+data = data1d.copy().reshape(ynb_pts+1,xnb_pts+1)
 
-x_enhance_factor = 10
-y_enhance_factor = 10
+x_enhance_factor = 5
+y_enhance_factor = 5
 X_new = np.linspace(0,xwidth,xnb_pts*x_enhance_factor+1)
 Y_new = np.linspace(0,ywidth,ynb_pts*y_enhance_factor+1)
 
@@ -100,6 +101,7 @@ for i in range(len(Y_new)) :
                     # so we can plot the 1d interpolated lines at the end
                     X0,X1,X2,X3 = X_old [j_old-2:j_old+2]
                     PP0,PP1,PP2,PP3 = data [i_old,j_old-2:j_old+2]
+                    #PP0,PP1,PP2,PP3 = data[i_old*ynb_pts + j_old-2 : i_old*ynb_pts + j_old+2]
                     AA,BB,CC,DD = update_coefficients(X0,PP0,X1,PP1,X2,PP2,X3,PP3,AA,BB,CC,DD)
                     ax.plot(X_new,y_new*np.ones(len(X_new)),interpol_1d_x, color='r')
 
@@ -122,6 +124,10 @@ for i in range(len(Y_new)) :
                 P10,P11,P12,P13 = data  [i_old-1, j_old-2:j_old+2]
                 P20,P21,P22,P23 = data  [i_old  , j_old-2:j_old+2]
                 P30,P31,P32,P33 = data  [i_old+1, j_old-2:j_old+2]
+                # P00,P01,P02,P03 = data [(i_old-2)*ynb_pts + j_old-2 : (i_old-2)*ynb_pts + j_old+2]
+                # P10,P11,P12,P13 = data [(i_old-1)*ynb_pts + j_old-2 : (i_old-1)*ynb_pts + j_old+2]
+                # P20,P21,P22,P23 = data [(i_old  )*ynb_pts + j_old-2 : (i_old  )*ynb_pts + j_old+2]
+                # P30,P31,P32,P33 = data [(i_old+1)*ynb_pts + j_old-2 : (i_old+1)*ynb_pts + j_old+2]
 
                 # finally, update all the coefficients
                 A0,B0,C0,D0 = update_coefficients(X00,P00,X01,P01,X02,P02,X03,P03,A0,B0,C0,D0)
