@@ -49,7 +49,8 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
         goOn = False
 
     # cases where we're near an azimuthal "border"
-    elif j_old == 0 :# cas 3
+    elif j_old == 0 : # case 3
+        #print "case 3.1"
         #seed        = xnb_pts-2
         #s0,s1,s2,s3 = xnb_pts-2,xnb_pts-1,0,1
         goOn = False
@@ -62,8 +63,9 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
         s0,s1,s2,s3 = xnb_pts-2,xnb_pts-1,0,1
         goOn = True
     elif X_new[j] > X_old[xnb_pts-1] : # case 3 #this line should be better written using % [2PI]
-        #seed        = xnb_pts-3
-        #s0,s1,s2,s3 = xnb_pts-3,xnb_pts-2,xnb_pts-1,0
+        #print "case 3.2"
+        seed        = j_old-2
+        s0,s1,s2,s3 = j_old-2,j_old-1,xnb_pts-2,xnb_pts-1
         goOn = False
     else : # default case : not near any border
         seed = j_old-2
@@ -123,7 +125,7 @@ data1d = rd.normal(1,0.1,data_nb_pts)
 
 
 x_enhance_factor = 10
-y_enhance_factor = 2
+y_enhance_factor = 10
 xwidth_new = xwidth*(1.-1./(xnb_pts*x_enhance_factor-1))
 X_new = np.linspace(0,xwidth_new,xnb_pts*x_enhance_factor-4)
 Y_new = np.linspace(0,ywidth,ynb_pts*y_enhance_factor-1)
