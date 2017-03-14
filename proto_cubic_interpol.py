@@ -50,7 +50,6 @@ Y_old = np.linspace(0,ywidth,ynb_pts+1)
 
 data_nb_pts = (xnb_pts+1)*(ynb_pts+1)
 data1d = rd.normal(1,0.1,data_nb_pts)
-data = data1d.copy().reshape(ynb_pts+1,xnb_pts+1)
 
 
 x_enhance_factor = 3
