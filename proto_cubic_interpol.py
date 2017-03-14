@@ -102,11 +102,14 @@ for i in range(len(Y_new)) :
         atRadialBorder = i_old <= 1 or Y_new[i] >= Y_old[ynb_pts-2]
         if   atRadialBorder :
             goOn = False
-        elif j_old == 0 :
+        # cases where we're near a azimuthal "border"
+        elif j_old == 0 :# cas 3
             goOn = False
-        elif j_old == 1 :
+        elif j_old == 1 :# cas 1
             goOn = False
-        elif X_new[j] >= X_old[xnb_pts-2] :
+        elif j_old == xnb_pts-1 :# cas 2
+            goOn = False
+        elif X_new[j] > X_old[xnb_pts-1] : # cas 3 also, ignore
             goOn = False
         else :
             l         = j_old-2 + (i_old-2)*xnb_pts
