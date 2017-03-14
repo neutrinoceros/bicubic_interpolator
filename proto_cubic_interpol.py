@@ -50,6 +50,8 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
 
     # cases where we're near an azimuthal "border"
     elif j_old == 0 :# cas 3
+        seed        = xnb_pts-2
+        s0,s1,s2,s3 = xnb_pts-2,xnb_pts-1,0,1
         goOn = False
     elif j_old == 1 : # cas 1
         seed        = xnb_pts-1
@@ -60,7 +62,8 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
         s0,s1,s2,s3 = xnb_pts-2,xnb_pts-1,0,1
         goOn = True
     elif X_new[j] > X_old[xnb_pts-1] : # cas 3 also, ignore
-        # pas censé être possible....
+        print "si vous lisez ceci (dans le terminal) vous avez cassé la logique"
+        # pas censé être possible dans cette maquette pour le moment mais **devrait** exister
         goOn = False
     else : # default case : not near any border
         seed = j_old-2
