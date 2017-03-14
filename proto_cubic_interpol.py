@@ -50,20 +50,20 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
 
     # cases where we're near an azimuthal "border"
     elif j_old == 0 :# cas 3
-        seed        = xnb_pts-2
-        s0,s1,s2,s3 = xnb_pts-2,xnb_pts-1,0,1
+        #seed        = xnb_pts-2
+        #s0,s1,s2,s3 = xnb_pts-2,xnb_pts-1,0,1
         goOn = False
-    elif j_old == 1 : # cas 1
+    elif j_old == 1 : # case 1
         seed        = xnb_pts-1
         s0,s1,s2,s3 = seed,0,1,2
         goOn = True
-    elif j_old == xnb_pts-1 : # cas 2
+    elif j_old == xnb_pts-1 : # case 2
         seed        = xnb_pts-2
         s0,s1,s2,s3 = xnb_pts-2,xnb_pts-1,0,1
         goOn = True
-    elif X_new[j] > X_old[xnb_pts-1] : # cas 3 also, ignore
-        print "si vous lisez ceci (dans le terminal) vous avez cassé la logique"
-        # pas censé être possible dans cette maquette pour le moment mais **devrait** exister
+    elif X_new[j] > X_old[xnb_pts-1] : # case 3 #this line should be better written using % [2PI]
+        #seed        = xnb_pts-3
+        #s0,s1,s2,s3 = xnb_pts-3,xnb_pts-2,xnb_pts-1,0
         goOn = False
     else : # default case : not near any border
         seed = j_old-2
@@ -104,14 +104,15 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
 
 # parameters -------------------------------------------------------------
 
-xwidth  = 10.
+xwidth  = 2.*np.pi
 xnb_pts = 7
+xwidth_old = xwidth*(1.-1./xnb_pts)
 
 ywidth  = 10.
 ynb_pts = 8
 
-X_old = np.linspace(0,xwidth,xnb_pts)
-Y_old = np.linspace(0,ywidth,ynb_pts)
+X_old = np.linspace(0,xwidth_old,xnb_pts)
+Y_old = np.linspace(0,ywidth    ,ynb_pts)
 
 XMAX = X_old[xnb_pts-2]
 YMAX = Y_old[ynb_pts-2]
@@ -121,9 +122,10 @@ data_nb_pts = xnb_pts*ynb_pts
 data1d = rd.normal(1,0.1,data_nb_pts)
 
 
-x_enhance_factor = 2
+x_enhance_factor = 10
 y_enhance_factor = 2
-X_new = np.linspace(0,xwidth,xnb_pts*x_enhance_factor-1)
+xwidth_new = xwidth*(1.-1./(xnb_pts*x_enhance_factor-1))
+X_new = np.linspace(0,xwidth_new,xnb_pts*x_enhance_factor-4)
 Y_new = np.linspace(0,ywidth,ynb_pts*y_enhance_factor-1)
 
 
@@ -147,7 +149,7 @@ A2=B2=C2=D2=0.
 A3=B3=C3=D3=0.
 A =B =C =D =0.
 
-i_old = 0
+
 for i in range(len(Y_new)) :
     y_new = Y_new[i]
     # (re)init interpolated data
@@ -155,16 +157,22 @@ for i in range(len(Y_new)) :
     interpol_1d_x = np.zeros(len(X_new))
 
     # update y index
+    i_old = 0
     while (Y_old[i_old] < Y_new[i]) :
         i_old += 1
 
-    j_old = 0
+
     for j in range(len(X_new)) :
         x_new = X_new[j]
         update_required = False
+
+        # update x index
+        j_old = 0
         while (X_old[j_old] < X_new[j]) :
             j_old += 1
             update_required = True
+            if j_old == xnb_pts :
+                break
 
         s0,s1,s2,s3,l,\
         lip,    lipp,    lippp,\
