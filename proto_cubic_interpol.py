@@ -52,9 +52,9 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
     elif j_old == 0 :# cas 3
         goOn = False
     elif j_old == 1 :# cas 1
-        # seed        = xnb_pts-1
-        # s0,s1,s2,s3 = seed,0,1,2
-        goOn = False
+        seed        = xnb_pts-1
+        s0,s1,s2,s3 = seed,0,1,2
+        goOn = True
 
     elif j_old == xnb_pts-1 :# cas 2
         goOn = False
