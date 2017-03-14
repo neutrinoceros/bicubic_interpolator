@@ -41,22 +41,22 @@ tdp = third_degree_polynom #alias
 # parameters -------------------------------------------------------------
 
 xwidth  = 10.
-xnb_pts = 8
+xnb_pts = 11
 
 ywidth  = 10.
-ynb_pts = 8
+ynb_pts = 11
 
-X_old = np.linspace(0,xwidth,xnb_pts+1)
-Y_old = np.linspace(0,ywidth,ynb_pts+1)
+X_old = np.linspace(0,xwidth,xnb_pts)
+Y_old = np.linspace(0,ywidth,ynb_pts)
 
-data_nb_pts = (xnb_pts+1)*(ynb_pts+1)
+data_nb_pts = xnb_pts*ynb_pts
 data1d = rd.normal(1,0.1,data_nb_pts)
 
 
 x_enhance_factor = 3
 y_enhance_factor = 3
-X_new = np.linspace(0,xwidth,xnb_pts*x_enhance_factor+1)
-Y_new = np.linspace(0,ywidth,ynb_pts*y_enhance_factor+1)
+X_new = np.linspace(0,xwidth,xnb_pts*x_enhance_factor)
+Y_new = np.linspace(0,ywidth,ynb_pts*y_enhance_factor)
 
 
 # script -----------------------------------------------------------------
@@ -98,21 +98,21 @@ for i in range(len(Y_new)) :
             j_old += 1
             update_required = True
             
-        atAzimutBorder = j_old <= 1 or X_new[j] >= X_old[xnb_pts-1]
-        atRadialBorder = i_old <= 1 or Y_new[i] >= Y_old[ynb_pts-1]
+        atAzimutBorder = j_old <= 1 or X_new[j] >= X_old[xnb_pts-2]
+        atRadialBorder = i_old <= 1 or Y_new[i] >= Y_old[ynb_pts-2]
         if   atRadialBorder :
             goOn = False
         elif j_old == 0 :
             goOn = False
         elif j_old == 1 :
             goOn = False
-        elif X_new[j] >= X_old[xnb_pts-1] :
+        elif X_new[j] >= X_old[xnb_pts-2] :
             goOn = False
         else :
-            l         = j_old-2 + (i_old-2)*(xnb_pts+1)
-            lip       = l + 1*(xnb_pts+1)
-            lipp      = l + 2*(xnb_pts+1)
-            lippp     = l + 3*(xnb_pts+1)
+            l         = j_old-2 + (i_old-2)*xnb_pts
+            lip       = l +   xnb_pts
+            lipp      = l + 2*xnb_pts
+            lippp     = l + 3*xnb_pts
             ljp       = l + 1
             ljpp      = l + 2
             ljppp     = l + 3
@@ -192,7 +192,7 @@ for i in range(len(Y_new)) :
             #ax.plot(dummy_x,dummy_y,tdp(A,B,C,D,dummy_y),color = 'k', ls = '--')
             # ----------------------------------------------------------------------
 
-    ax.scatter(X_old,Y_old[i_old]*np.ones(len(X_old)),data1d[i_old*(xnb_pts+1) : (i_old+1)*(xnb_pts+1)])
+    ax.scatter(X_old,Y_old[i_old]*np.ones(len(X_old)),data1d[i_old*xnb_pts : (i_old+1)*xnb_pts])
     ax.plot(X_new,y_new*np.ones(len(X_new)),interpol_data, color='c', lw=2, ls='-')
 
 plt.ion();plt.show();plt.ioff();raw_input("press anykey to quit    ")# uncomment for tests purposes
