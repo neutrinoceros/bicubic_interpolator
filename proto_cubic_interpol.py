@@ -40,10 +40,10 @@ tdp = third_degree_polynom #alias
 # parameters -------------------------------------------------------------
 
 xwidth  = 10.
-xnb_pts = 5
+xnb_pts = 7
 
 ywidth  = 10.
-ynb_pts = 5
+ynb_pts = 7
 
 X_old = np.linspace(0,xwidth,xnb_pts+1)
 Y_old = np.linspace(0,ywidth,ynb_pts+1)
@@ -52,8 +52,9 @@ data_nb_pts = (xnb_pts+1)*(ynb_pts+1)
 data1d = rd.normal(1,0.1,data_nb_pts)
 data = data1d.copy().reshape(ynb_pts+1,xnb_pts+1)
 
-x_enhance_factor = 5
-y_enhance_factor = 5
+
+x_enhance_factor = 3
+y_enhance_factor = 3
 X_new = np.linspace(0,xwidth,xnb_pts*x_enhance_factor+1)
 Y_new = np.linspace(0,ywidth,ynb_pts*y_enhance_factor+1)
 
@@ -120,14 +121,10 @@ for i in range(len(Y_new)) :
                 Y30=Y31=Y32=Y33 = Y_old [i_old+1]
 
                 # field values
-                P00,P01,P02,P03 = data  [i_old-2, j_old-2:j_old+2]
-                P10,P11,P12,P13 = data  [i_old-1, j_old-2:j_old+2]
-                P20,P21,P22,P23 = data  [i_old  , j_old-2:j_old+2]
-                P30,P31,P32,P33 = data  [i_old+1, j_old-2:j_old+2]
-                # P00,P01,P02,P03 = data [(i_old-2)*ynb_pts + j_old-2 : (i_old-2)*ynb_pts + j_old+2]
-                # P10,P11,P12,P13 = data [(i_old-1)*ynb_pts + j_old-2 : (i_old-1)*ynb_pts + j_old+2]
-                # P20,P21,P22,P23 = data [(i_old  )*ynb_pts + j_old-2 : (i_old  )*ynb_pts + j_old+2]
-                # P30,P31,P32,P33 = data [(i_old+1)*ynb_pts + j_old-2 : (i_old+1)*ynb_pts + j_old+2]
+                P00,P01,P02,P03 = data1d[(i_old-2)*(xnb_pts+1) + j_old-2 : (i_old-2)*(xnb_pts+1) + j_old+2]
+                P10,P11,P12,P13 = data1d[(i_old-1)*(xnb_pts+1) + j_old-2 : (i_old-1)*(xnb_pts+1) + j_old+2]
+                P20,P21,P22,P23 = data1d[(i_old  )*(xnb_pts+1) + j_old-2 : (i_old  )*(xnb_pts+1) + j_old+2]
+                P30,P31,P32,P33 = data1d[(i_old+1)*(xnb_pts+1) + j_old-2 : (i_old+1)*(xnb_pts+1) + j_old+2]
 
                 # finally, update all the coefficients
                 A0,B0,C0,D0 = update_coefficients(X00,P00,X01,P01,X02,P02,X03,P03,A0,B0,C0,D0)
