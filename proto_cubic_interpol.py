@@ -51,31 +51,37 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
     #default values
     seed=s0=s1=s2=s3=0
     #dev note : those booleans should be global variables
-    useXghostNEG1=useXghost0=useXghost1=useYghostIN=useYghostOUT=False
+    useXghostNEG1=useXghost0=useXghost1=False
+    useYghostIN=useYghostOUT=useYghostINNER=useYghostOUTER=False
 
-    if   atRadialBorder :
-        goOn = False
+    # default case : not near any border
+    seed = j_old-2
+    s0,s1,s2,s3 = seed,seed+1,seed+2,seed+3
+    goOn = True
 
     # cases where we're near an azimuthal "border"
-    elif j_old == 1 : # case 1
+    if j_old == 1 : # case 1
         seed        = 0
         s0,s1,s2,s3 = xnb_pts-1,seed,seed+1,seed+2
         useXghostNEG1 = True
-        goOn = True
     elif j_old == xnb_pts-1 : # case 2
         seed = xnb_pts-3
         s0,s1,s2,s3 = seed,seed+1,seed+2,0
         useXghost0 = True
-        goOn = True
     elif X_new[j] > X_old[xnb_pts-1] : # case 3 #this line should be better written using % [2PI]
         seed = xnb_pts-2
         s0,s1,s2,s3 = seed,seed+1,0,1
         useXghost0=useXghost1 = True
-        goOn = True
-    else : # default case : not near any border
-        seed = j_old-2
-        s0,s1,s2,s3 = seed,seed+1,seed+2,seed+3
-        goOn = True
+
+    # cases where we're near a radial border
+    if i_old == 0 :
+        goOn = False
+    elif i_old == 1 :
+        goOn = False
+    elif i_old == ynb_pts-1 :
+        goOn = False
+    elif i_old == ynb_pts :
+        goOn = False
 
 
     # computation at long last
@@ -107,7 +113,8 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
         lippjp, lippjpp, lippjppp,\
         lipppjp,lipppjpp,lipppjppp,\
         useXghostNEG1,useXghost0,useXghost1,\
-        useYghostIN,useYghostOUT,goOn
+        useYghostIN,useYghostOUT,useYghostINNER,useYghostOUTER,\
+        goOn
 
 
 # parameters -------------------------------------------------------------
@@ -130,6 +137,15 @@ YMAX = Y_old[ynb_pts-2]
 X_GHOSTneg1 = X_old[-1] - 2*np.pi
 X_GHOST0    = X_old[0 ] + 2*np.pi
 X_GHOST1    = X_old[1 ] + 2*np.pi
+
+#careful : those formulations may not work in logaritmic radial scaling
+#          where "ystep" in not uniquely defined
+ystep = ywidth/(ynb_pts-1)
+Y_GHOSTin    = Y_old[0]  -   ystep
+Y_GHOSTinner = Y_old[0]  - 2*ystep
+Y_GHOSTout   = Y_old[-1] +   ystep
+Y_GHOSTouter = Y_old[-1] + 2*ystep
+
 
 data_nb_pts = xnb_pts*ynb_pts
 data1d = rd.normal(1,0.1,data_nb_pts)
@@ -193,7 +209,8 @@ for i in range(len(Y_new)) :
         lippjp, lippjpp, lippjppp,\
         lipppjp,lipppjpp,lipppjppp,\
         useXghostNEG1,useXghost0,useXghost1,\
-        useYghostIN,useYghostOUT,goOn = update_indexes(i_old,j_old,XMAX,YMAX)
+        useYghostIN,useYghostOUT,useYghostINNER,useYghostOUTER,\
+        goOn = update_indexes(i_old,j_old,XMAX,YMAX)
 
         if goOn :# à terme, ce niveau d'indentation doit être supprimé
             if update_required :
@@ -237,6 +254,15 @@ for i in range(len(Y_new)) :
                 Y10=Y11=Y12=Y13 = Y_old [i_old-1]
                 Y20=Y21=Y22=Y23 = Y_old [i_old  ]
                 Y30=Y31=Y32=Y33 = Y_old [i_old+1]
+
+                if   useYghostINNER : #case 1 #condition should be equivalent to (useYghostIN && useYghostINNER)
+                    pass
+                elif useYghostIN    : #case 2
+                    pass
+                elif useYghostOUTER : #case 3 #condition should be equivalent to (useYghostOUT && useYghostOUTER)
+                    pass
+                elif useYghostOUT   : #case 4
+                    pass
 
                 # field values
                 P00,P01,P02,P03 = data1d[l],    data1d[ljp],    data1d[ljpp],     data1d[ljppp]
