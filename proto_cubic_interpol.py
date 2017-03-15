@@ -125,11 +125,11 @@ Y_old = np.linspace(0,ywidth    ,ynb_pts)
 XMAX = X_old[xnb_pts-2]
 YMAX = Y_old[ynb_pts-2]
 
-X_GHOST = xwidth #assuming that xmin is 0, which should always be the case
+X_GHOST0 = 2*np.pi #assuming that xmin=0, and xwidth=2Pi, which should always be the case
+X_GHOST1 = X_old + 2*np.pi
 
 data_nb_pts = xnb_pts*ynb_pts
 data1d = rd.normal(1,0.1,data_nb_pts)
-
 
 x_enhance_factor = 10
 y_enhance_factor = 10
