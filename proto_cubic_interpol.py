@@ -50,6 +50,7 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
 
     #default values
     seed=s0=s1=s2=s3=0
+    #dev note : those booleans should be global variables
     useXghostNEG1=useXghost0=useXghost1=useYghostIN=useYghostOUT=False
 
     if   atRadialBorder :
@@ -222,6 +223,13 @@ for i in range(len(Y_new)) :
                 X10,X11,X12,X13 = \
                 X20,X21,X22,X23 = \
                 X30,X31,X32,X33 = X_old [s0], X_old [s1], X_old [s2], X_old [s3]
+
+                if useXghostNEG1 : #case 1
+                    pass
+                if useXghost0 and not useXghost1 : #case 2
+                    pass
+                if useXghost0 and useXghost1 : #case 3
+                    pass
 
                 # however, we don't enconter any concerning issue with log-spaced
                 # radial grids but the syntax ought to be different
