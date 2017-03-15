@@ -73,7 +73,8 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
         goOn = True
     elif X_new[j] > X_old[xnb_pts-1] : # case 3 #this line should be better written using % [2PI]
         #print "case 3.2"
-        s0,s1,s2,s3 = j_old-2,j_old-1,xnb_pts-2,xnb_pts-1
+        seed = xnb_pts-2
+        s0,s1,s2,s3 = seed,seed+1,0,1
         goOn = False
     else : # default case : not near any border
         seed = j_old-2
@@ -131,8 +132,8 @@ YMAX = Y_old[ynb_pts-2]
 
 #assuming that xmin=0, and xwidth=2Pi, which should always be the case
 X_GHOSTneg1 = X_old[-1] - 2*np.pi
-X_GHOST0    = 2*np.pi
-X_GHOST1    = X_old + 2*np.pi
+X_GHOST0    = X_old[0 ] + 2*np.pi
+X_GHOST1    = X_old[1 ] + 2*np.pi
 
 data_nb_pts = xnb_pts*ynb_pts
 data1d = rd.normal(1,0.1,data_nb_pts)
@@ -231,7 +232,8 @@ for i in range(len(Y_new)) :
                 elif useXghost0 and not useXghost1 : #case 2
                     X03=X13=X23=X33 = X_GHOST0
                 elif useXghost0 and useXghost1 :     #case 3
-                    pass
+                    X02=X12=X22=X32 = X_GHOST0
+                    X03=X13=X23=X33 = X_GHOST1
 
                 # however, we don't enconter any concerning issue with log-spaced
                 # radial grids but the syntax ought to be different
