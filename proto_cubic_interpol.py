@@ -224,11 +224,11 @@ for i in range(len(Y_new)) :
                 X20,X21,X22,X23 = \
                 X30,X31,X32,X33 = X_old [s0], X_old [s1], X_old [s2], X_old [s3]
 
-                if useXghostNEG1 : #case 1
+                if useXghostNEG1 :                   #case 1
                     pass
-                if useXghost0 and not useXghost1 : #case 2
+                elif useXghost0 and not useXghost1 : #case 2
                     pass
-                if useXghost0 and useXghost1 : #case 3
+                elif useXghost0 and useXghost1 :     #case 3
                     pass
 
                 # however, we don't enconter any concerning issue with log-spaced
