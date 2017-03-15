@@ -57,11 +57,6 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
         goOn = False
 
     # cases where we're near an azimuthal "border"
-    elif j_old == 0 : # case 3
-        #print "case 3.1"
-        #seed        = xnb_pts-2
-        #s0,s1,s2,s3 = xnb_pts-2,xnb_pts-1,0,1
-        goOn = False
     elif j_old == 1 : # case 1
         seed        = 0
         s0,s1,s2,s3 = xnb_pts-1,seed,seed+1,seed+2
@@ -73,7 +68,6 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
         useXghost0 = True
         goOn = True
     elif X_new[j] > X_old[xnb_pts-1] : # case 3 #this line should be better written using % [2PI]
-        #print "case 3.2"
         seed = xnb_pts-2
         s0,s1,s2,s3 = seed,seed+1,0,1
         useXghost0=useXghost1 = True
@@ -186,7 +180,7 @@ for i in range(len(Y_new)) :
 
         # update x index
         j_old = 0
-        while (X_old[j_old] < X_new[j]) :
+        while (X_old[j_old] <= X_new[j]) :
             j_old += 1
             update_required = True
             if j_old == xnb_pts :
@@ -229,11 +223,11 @@ for i in range(len(Y_new)) :
                 X20,X21,X22,X23 = \
                 X30,X31,X32,X33 = X_old [s0], X_old [s1], X_old [s2], X_old [s3]
 
-                if useXghostNEG1 :                   #case 1
+                if   useXghostNEG1                 : #case 1
                     X00=X10=X20=X30 = X_GHOSTneg1
                 elif useXghost0 and not useXghost1 : #case 2
                     X03=X13=X23=X33 = X_GHOST0
-                elif useXghost0 and useXghost1 :     #case 3
+                elif useXghost0 and     useXghost1 : #case 3
                     X02=X12=X22=X32 = X_GHOST0
                     X03=X13=X23=X33 = X_GHOST1
 
