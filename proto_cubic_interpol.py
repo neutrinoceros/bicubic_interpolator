@@ -50,7 +50,7 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
 
     #default values
     seed=s0=s1=s2=s3=0
-    useXghost0=useXghost1=useYghostIN=useYghostOUT=False
+    useXghostNEG1=useXghost0=useXghost1=useYghostIN=useYghostOUT=False
 
     if   atRadialBorder :
         goOn = False
@@ -106,7 +106,7 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
         lipjp,  lipjpp,  lipjppp,\
         lippjp, lippjpp, lippjppp,\
         lipppjp,lipppjpp,lipppjppp,\
-        useXghost0,useXghost1,\
+        useXghostNEG1,useXghost0,useXghost1,\
         useYghostIN,useYghostOUT,goOn
 
 
@@ -125,8 +125,11 @@ Y_old = np.linspace(0,ywidth    ,ynb_pts)
 XMAX = X_old[xnb_pts-2]
 YMAX = Y_old[ynb_pts-2]
 
-X_GHOST0 = 2*np.pi #assuming that xmin=0, and xwidth=2Pi, which should always be the case
-X_GHOST1 = X_old + 2*np.pi
+
+#assuming that xmin=0, and xwidth=2Pi, which should always be the case
+X_GHOSTneg1 = X_old[-1] - 2*np.pi
+X_GHOST0    = 2*np.pi
+X_GHOST1    = X_old + 2*np.pi
 
 data_nb_pts = xnb_pts*ynb_pts
 data1d = rd.normal(1,0.1,data_nb_pts)
@@ -189,7 +192,7 @@ for i in range(len(Y_new)) :
         lipjp,  lipjpp,  lipjppp,\
         lippjp, lippjpp, lippjppp,\
         lipppjp,lipppjpp,lipppjppp,\
-        useXghost0,useXghost1,\
+        useXghostNEG1,useXghost0,useXghost1,\
         useYghostIN,useYghostOUT,goOn = update_indexes(i_old,j_old,XMAX,YMAX)
 
         if goOn :# à terme, ce niveau d'indentation doit être supprimé
