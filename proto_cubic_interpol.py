@@ -1,6 +1,9 @@
 #!/usr/bin/python
 #-*-coding:utf-8-*-
 
+# written march 2017
+# Clément Robert
+
 # imports ----------------------------------------------------------------
 
 import numpy as np
