@@ -68,8 +68,9 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
         useXghostNEG1 = True
         goOn = True
     elif j_old == xnb_pts-1 : # case 2
-        s0,s1,s2,s3 = xnb_pts-2,xnb_pts-1,0,1
-        goOn = False
+        seed = xnb_pts-3
+        s0,s1,s2,s3 = seed,seed+1,seed+2,0
+        goOn = True
     elif X_new[j] > X_old[xnb_pts-1] : # case 3 #this line should be better written using % [2PI]
         #print "case 3.2"
         s0,s1,s2,s3 = j_old-2,j_old-1,xnb_pts-2,xnb_pts-1
@@ -228,7 +229,7 @@ for i in range(len(Y_new)) :
                 if useXghostNEG1 :                   #case 1
                     X00=X10=X20=X30 = X_GHOSTneg1
                 elif useXghost0 and not useXghost1 : #case 2
-                    pass
+                    X03=X13=X23=X33 = X_GHOST0
                 elif useXghost0 and useXghost1 :     #case 3
                     pass
 
