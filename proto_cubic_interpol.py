@@ -60,27 +60,28 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
     goOn = True
 
     # cases where we're near an azimuthal "border"
-    if j_old == 1 : # case 1
+    if j_old == 1 :                    # case 1
         seed        = 0
         s0,s1,s2,s3 = xnb_pts-1,seed,seed+1,seed+2
         useXghostNEG1 = True
-    elif j_old == xnb_pts-1 : # case 2
+    elif j_old == xnb_pts-1 :          # case 2
         seed = xnb_pts-3
         s0,s1,s2,s3 = seed,seed+1,seed+2,0
         useXghost0 = True
-    elif X_new[j] > X_old[xnb_pts-1] : # case 3 #this line should be better written using % [2PI]
+    elif X_new[j] > X_old[xnb_pts-1] : # case 3
+        #dev note : this condition should be better written using % [2PI]
         seed = xnb_pts-2
         s0,s1,s2,s3 = seed,seed+1,0,1
         useXghost0=useXghost1 = True
 
     # cases where we're near a radial border
-    if i_old == 0 :
+    if i_old == 0 :           # case 1
         goOn = False
-    elif i_old == 1 :
+    elif i_old == 1 :         # case 2
         goOn = False
-    elif i_old == ynb_pts-1 :
+    elif i_old == ynb_pts-1 : # case 3
         goOn = False
-    elif i_old == ynb_pts :
+    elif i_old == ynb_pts :   # case 4
         goOn = False
 
 
