@@ -70,6 +70,7 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
     elif j_old == xnb_pts-1 : # case 2
         seed = xnb_pts-3
         s0,s1,s2,s3 = seed,seed+1,seed+2,0
+        useXghost0 = True
         goOn = True
     elif X_new[j] > X_old[xnb_pts-1] : # case 3 #this line should be better written using % [2PI]
         #print "case 3.2"
