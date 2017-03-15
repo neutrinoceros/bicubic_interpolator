@@ -76,7 +76,8 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
         #print "case 3.2"
         seed = xnb_pts-2
         s0,s1,s2,s3 = seed,seed+1,0,1
-        goOn = False
+        useXghost0=useXghost1 = True
+        goOn = True
     else : # default case : not near any border
         seed = j_old-2
         s0,s1,s2,s3 = seed,seed+1,seed+2,seed+3
