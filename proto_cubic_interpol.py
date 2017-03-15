@@ -55,16 +55,14 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
         #s0,s1,s2,s3 = xnb_pts-2,xnb_pts-1,0,1
         goOn = False
     elif j_old == 1 : # case 1
-        seed        = xnb_pts-1
-        s0,s1,s2,s3 = seed,0,1,2
+        seed        = 0
+        s0,s1,s2,s3 = xnb_pts-1,seed,seed+1,seed+2
         goOn = True
     elif j_old == xnb_pts-1 : # case 2
-        seed        = xnb_pts-2
         s0,s1,s2,s3 = xnb_pts-2,xnb_pts-1,0,1
         goOn = True
     elif X_new[j] > X_old[xnb_pts-1] : # case 3 #this line should be better written using % [2PI]
         #print "case 3.2"
-        seed        = j_old-2
         s0,s1,s2,s3 = j_old-2,j_old-1,xnb_pts-2,xnb_pts-1
         goOn = False
     else : # default case : not near any border
