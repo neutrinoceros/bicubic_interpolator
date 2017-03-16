@@ -58,7 +58,6 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
     shift = 0
     seed = j_old-2
     s0,s1,s2,s3 = seed,seed+1,seed+2,seed+3
-    goOn = True
 
     # cases where we're near an azimuthal "border"
     if j_old == 1 :                    # case 1
@@ -79,19 +78,15 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
     if i_old == 0 :           # case 1
         shift = 2
         useYghostINNER = True
-        goOn = True
     elif i_old == 1 :         # case 2
         shift = 1
         useYghostIN = True #not excatly useful here...
-        goOn = True
     elif i_old == ynb_pts-1 : # case 3
         shift = -1
         useYghostOUT = True
-        goOn = True
     elif i_old == ynb_pts :   # case 4
         shift = -2
         useYghostOUTER = True
-        goOn = True
 
     i0 = i_old-2+shift
     # computation at long last
@@ -123,8 +118,7 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
         lippjp, lippjpp, lippjppp,\
         lipppjp,lipppjpp,lipppjppp,\
         useXghostNEG1,useXghost0,useXghost1,\
-        useYghostIN,useYghostOUT,useYghostINNER,useYghostOUTER,\
-        goOn
+        useYghostIN,useYghostOUT,useYghostINNER,useYghostOUTER
 
 
 # parameters -------------------------------------------------------------
@@ -223,9 +217,10 @@ for i in range(len(Y_new)) :
         lippjp, lippjpp, lippjppp,\
         lipppjp,lipppjpp,lipppjppp,\
         useXghostNEG1,useXghost0,useXghost1,\
-        useYghostIN,useYghostOUT,useYghostINNER,useYghostOUTER,\
-        goOn = update_indexes(i_old,j_old,XMAX,YMAX)
+        useYghostIN,useYghostOUT,useYghostINNER,useYghostOUTER\
+        = update_indexes(i_old,j_old,XMAX,YMAX)
 
+        goOn = True
         if goOn :# à terme, ce niveau d'indentation doit être supprimé
             if update_required :
                 #-----------------------------------------------------------------------------------------------
