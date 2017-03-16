@@ -77,7 +77,9 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
 
     # cases where we're near a radial border
     if i_old == 0 :           # case 1
-        goOn = False
+        shift = 2
+        useYghostINNER = True
+        goOn = True
     elif i_old == 1 :         # case 2
         shift = 1
         useYghostIN = True #not excatly useful here...
@@ -87,7 +89,9 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
         useYghostOUT = True
         goOn = True
     elif i_old == ynb_pts :   # case 4
-        goOn = False
+        shift = -2
+        useYghostOUTER = True
+        goOn = True
 
 
     # computation at long last
@@ -131,9 +135,10 @@ xwidth_old = xwidth*(1.-1./xnb_pts)
 
 ywidth  = 10.
 ynb_pts = 8
+ystep_old = ywidth / (ynb_pts +2)
 
-X_old = np.linspace(0,xwidth_old,xnb_pts)
-Y_old = np.linspace(0,ywidth    ,ynb_pts)
+X_old = np.linspace(0.,xwidth_old,xnb_pts)
+Y_old = np.linspace(ystep_old,ywidth-ystep_old,ynb_pts)
 
 XMAX = X_old[xnb_pts-2]
 YMAX = Y_old[ynb_pts-2]
@@ -146,12 +151,12 @@ X_GHOST1    = X_old[1 ] + 2*np.pi
 
 #careful : those formulations may not work in logaritmic radial scaling
 #          where "ystep" in not uniquely defined
-ystep = ywidth/(ynb_pts-1)
-Y_GHOSTin    = Y_old[0]  -   ystep
-Y_GHOSTinner = Y_old[0]  - 2*ystep
-Y_GHOSTout   = Y_old[-1] +   ystep
-Y_GHOSTouter = Y_old[-1] + 2*ystep
-
+# ystep = ywidth/(ynb_pts-1)
+# Y_GHOSTin    = Y_old[0]  -   ystep
+# Y_GHOSTinner = Y_old[0]  - 2*ystep
+# Y_GHOSTout   = Y_old[-1] +   ystep
+# Y_GHOSTouter = Y_old[-1] + 2*ystep
+#------------------------------------- deprecated
 
 data_nb_pts = xnb_pts*ynb_pts
 data1d = rd.normal(1,0.1,data_nb_pts)
@@ -194,10 +199,13 @@ for i in range(len(Y_new)) :
     i_old = 0
     while (Y_old[i_old] < Y_new[i]) :
         i_old += 1
+        if i_old == ynb_pts :
+            break
 
 
     for j in range(len(X_new)) :
         x_new = X_new[j]
+        y_new_dummy = y_new
         update_required = False
 
         # update x index
@@ -258,8 +266,11 @@ for i in range(len(Y_new)) :
                 # radial grids but the syntax ought to be different
 
                 if   useYghostINNER : #case 1 #condition should be equivalent to (useYghostIN && useYghostINNER)
-                    print "case 1"
-                    pass
+                    Y00=Y01=Y02=Y03 = Y_old [0]
+                    Y10=Y11=Y12=Y13 = Y_old [1]
+                    Y20=Y21=Y22=Y23 = Y_old [2]
+                    Y30=Y31=Y32=Y33 = Y_old [3]
+                    y_new_dummy = Y00
                 elif useYghostIN    : #case 2
                     #shifting 1 line away from the border
                     Y00=Y01=Y02=Y03 = Y_old [0]
@@ -267,8 +278,11 @@ for i in range(len(Y_new)) :
                     Y20=Y21=Y22=Y23 = Y_old [2]
                     Y30=Y31=Y32=Y33 = Y_old [3]
                 elif useYghostOUTER : #case 4 #condition should be equivalent to (useYghostOUT && useYghostOUTER)
-                    print "case 4"
-                    pass
+                    Y00=Y01=Y02=Y03 = Y_old [i_old-4]
+                    Y10=Y11=Y12=Y13 = Y_old [i_old-3]
+                    Y20=Y21=Y22=Y23 = Y_old [i_old-2]
+                    Y30=Y31=Y32=Y33 = Y_old [i_old-1]
+                    y_new_dummy = Y30
                 elif useYghostOUT   : #case 3
                     #shifting 1 line away from the border
                     Y00=Y01=Y02=Y03 = Y_old [i_old-3]
@@ -302,7 +316,7 @@ for i in range(len(Y_new)) :
             P3 = tdp(A3,B3,C3,D3,x_new)
 
             A,B,C,D = update_coefficients(Y00,P0,Y10,P1,Y20,P2,Y30,P3,A,B,C,D)
-            interpol_value = tdp(A,B,C,D,y_new)
+            interpol_value = tdp(A,B,C,D,y_new_dummy)
             interpol_data[j] = interpol_value
 
             # those lines are used to keep track and debug the process -------------
@@ -311,7 +325,8 @@ for i in range(len(Y_new)) :
             #ax.plot(dummy_x,dummy_y,tdp(A,B,C,D,dummy_y),color = 'k', ls = '--')
             # ----------------------------------------------------------------------
 
-    ax.scatter(X_old,Y_old[i_old]*np.ones(len(X_old)),data1d[i_old*xnb_pts : (i_old+1)*xnb_pts])
+    if i_old < ynb_pts :
+        ax.scatter(X_old,Y_old[i_old]*np.ones(len(X_old)),data1d[i_old*xnb_pts : (i_old+1)*xnb_pts])
     ax.plot(X_new,y_new*np.ones(len(X_new)),interpol_data, color='c', lw=2, ls='-')
 
 plt.ion();plt.show();plt.ioff();raw_input("press anykey to quit    ")# uncomment for tests purposes
