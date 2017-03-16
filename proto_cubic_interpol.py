@@ -50,20 +50,19 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
 
 
     # handling exceptions near azimuthal "borders" (periodic, really)
-    if j_old == 1 :                    # case 1
+    if j_old == 1 :           # case 1
         seed        = 0
         s0,s1,s2,s3 = xnb_pts-1,seed,seed+1,seed+2
         useXghostNEG1 = True
-    elif j_old == xnb_pts-1 :          # case 2
+    elif j_old == xnb_pts-1 : # case 2
         seed = xnb_pts-3
         s0,s1,s2,s3 = seed,seed+1,seed+2,0
         useXghost0 = True
-    elif X_new[j] > X_old[xnb_pts-1] : # case 3
-        #dev note : this condition should be better written using % [2PI]
+    elif j_old > xnb_pts-1 :  # case 3
         seed = xnb_pts-2
         s0,s1,s2,s3 = seed,seed+1,0,1
         useXghost0=useXghost1 = True
-    else :                             # general case
+    else :                    # general case
         seed = j_old-2
         s0,s1,s2,s3 = seed,seed+1,seed+2,seed+3
 
