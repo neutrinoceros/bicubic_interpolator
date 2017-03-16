@@ -55,6 +55,7 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
     useYghostIN=useYghostOUT=useYghostINNER=useYghostOUTER=False
 
     # default case : not near any border
+    shift = 0
     seed = j_old-2
     s0,s1,s2,s3 = seed,seed+1,seed+2,seed+3
     goOn = True
@@ -78,18 +79,22 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
     if i_old == 0 :           # case 1
         goOn = False
     elif i_old == 1 :         # case 2
-        goOn = False
+        shift = 1
+        useYghostIN = True #not excatly useful here...
+        goOn = True
     elif i_old == ynb_pts-1 : # case 3
-        goOn = False
+        shift = -1
+        useYghostOUT = True
+        goOn = True
     elif i_old == ynb_pts :   # case 4
         goOn = False
 
 
     # computation at long last
-    l         = s0 + (i_old-2)*xnb_pts
-    ljp       = s1 + (i_old-2)*xnb_pts
-    ljpp      = s2 + (i_old-2)*xnb_pts
-    ljppp     = s3 + (i_old-2)*xnb_pts
+    l         = s0 + (i_old-2+shift)*xnb_pts
+    ljp       = s1 + (i_old-2+shift)*xnb_pts
+    ljpp      = s2 + (i_old-2+shift)*xnb_pts
+    ljppp     = s3 + (i_old-2+shift)*xnb_pts
 
     lip       = l     +   xnb_pts
     lipp      = l     + 2*xnb_pts
@@ -251,19 +256,30 @@ for i in range(len(Y_new)) :
 
                 # however, we don't enconter any concerning issue with log-spaced
                 # radial grids but the syntax ought to be different
-                Y00=Y01=Y02=Y03 = Y_old [i_old-2]
-                Y10=Y11=Y12=Y13 = Y_old [i_old-1]
-                Y20=Y21=Y22=Y23 = Y_old [i_old  ]
-                Y30=Y31=Y32=Y33 = Y_old [i_old+1]
 
                 if   useYghostINNER : #case 1 #condition should be equivalent to (useYghostIN && useYghostINNER)
+                    print "case 1"
                     pass
                 elif useYghostIN    : #case 2
+                    #shifting 1 line away from the border
+                    Y00=Y01=Y02=Y03 = Y_old [0]
+                    Y10=Y11=Y12=Y13 = Y_old [1]
+                    Y20=Y21=Y22=Y23 = Y_old [2]
+                    Y30=Y31=Y32=Y33 = Y_old [3]
+                elif useYghostOUTER : #case 4 #condition should be equivalent to (useYghostOUT && useYghostOUTER)
+                    print "case 4"
                     pass
-                elif useYghostOUTER : #case 3 #condition should be equivalent to (useYghostOUT && useYghostOUTER)
-                    pass
-                elif useYghostOUT   : #case 4
-                    pass
+                elif useYghostOUT   : #case 3
+                    #shifting 1 line away from the border
+                    Y00=Y01=Y02=Y03 = Y_old [i_old-3]
+                    Y10=Y11=Y12=Y13 = Y_old [i_old-2]
+                    Y20=Y21=Y22=Y23 = Y_old [i_old-1]
+                    Y30=Y31=Y32=Y33 = Y_old [i_old  ]
+                else : #general case : away from the radial border where the 16 neighbours are correctly defined
+                    Y00=Y01=Y02=Y03 = Y_old [i_old-2]
+                    Y10=Y11=Y12=Y13 = Y_old [i_old-1]
+                    Y20=Y21=Y22=Y23 = Y_old [i_old  ]
+                    Y30=Y31=Y32=Y33 = Y_old [i_old+1]
 
                 # field values
                 P00,P01,P02,P03 = data1d[l],    data1d[ljp],    data1d[ljpp],     data1d[ljppp]
