@@ -40,8 +40,6 @@ def update_coefficients(x0,p0,x1,p1,x2,p2,x3,p3,a,b,c,d) :
 def third_degree_polynom(a,b,c,d,x) :
     return a*x**3 + b*x**2 + c*x + d
 
-tdp = third_degree_polynom #alias
-
 
 def update_indexes(i_old,j_old,xmax,ymax,s0,s1,s2,s3,l,\
                    lip,    lipp,    lippp,\
@@ -257,22 +255,22 @@ for i in range(len(Y_new)) :
             A2,B2,C2,D2 = update_coefficients(X20,P20,X21,P21,X22,P22,X23,P23,A2,B2,C2,D2)
             A3,B3,C3,D3 = update_coefficients(X30,P30,X31,P31,X32,P32,X33,P33,A3,B3,C3,D3)
 
-            interpol_1d_x[j] = tdp(AA,BB,CC,DD,x_new)
+            interpol_1d_x[j] = third_degree_polynom(AA,BB,CC,DD,x_new)
 
         # this is where magic happens
-        P0 = tdp(A0,B0,C0,D0,x_new)
-        P1 = tdp(A1,B1,C1,D1,x_new)
-        P2 = tdp(A2,B2,C2,D2,x_new)
-        P3 = tdp(A3,B3,C3,D3,x_new)
+        P0 = third_degree_polynom(A0,B0,C0,D0,x_new)
+        P1 = third_degree_polynom(A1,B1,C1,D1,x_new)
+        P2 = third_degree_polynom(A2,B2,C2,D2,x_new)
+        P3 = third_degree_polynom(A3,B3,C3,D3,x_new)
 
         A,B,C,D = update_coefficients(Y00,P0,Y10,P1,Y20,P2,Y30,P3,A,B,C,D)
-        interpol_value = tdp(A,B,C,D,y_new_dummy)
+        interpol_value = third_degree_polynom(A,B,C,D,y_new_dummy)
         interpol_data[j] = interpol_value
 
         # those lines are used to keep track and debug the process -------------
         #dummy_x = x_new*np.ones(100)
         #dummy_y = np.linspace(0.,ywidth,100)
-        #ax.plot(dummy_x,dummy_y,tdp(A,B,C,D,dummy_y),color = 'k', ls = '--')
+        #ax.plot(dummy_x,dummy_y,third_degree_polynom(A,B,C,D,dummy_y),color = 'k', ls = '--')
         # ----------------------------------------------------------------------
 
     if i_old < ynb_pts :
