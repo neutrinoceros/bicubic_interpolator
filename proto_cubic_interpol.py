@@ -45,10 +45,8 @@ tdp = third_degree_polynom #alias
 
 def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as arguments
 
-
     #dev note : those booleans should be global variables
     useXghostNEG1=useXghost0=useXghost1=False
-
 
 
     # handling exceptions near azimuthal "borders" (periodic, really)
@@ -68,7 +66,6 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
     else :                             # general case
         seed = j_old-2
         s0,s1,s2,s3 = seed,seed+1,seed+2,seed+3
-
 
     # handling exceptions near radial borders
     if i_old == 0 :           # case 1
@@ -159,13 +156,12 @@ Y10=Y11=Y12=Y13= \
 Y20=Y21=Y22=Y23= \
 Y30=Y31=Y32=Y33= 0.0
 
-
-AA=BB=CC=DD=0.
-A0=B0=C0=D0=0.
-A1=B1=C1=D1=0.
-A2=B2=C2=D2=0.
-A3=B3=C3=D3=0.
-A =B =C =D =0.
+AA=BB=CC=DD= \
+A0=B0=C0=D0= \
+A1=B1=C1=D1= \
+A2=B2=C2=D2= \
+A3=B3=C3=D3= \
+A =B =C =D = 0.
 
 
 for i in range(len(Y_new)) :
@@ -180,7 +176,6 @@ for i in range(len(Y_new)) :
         i_old += 1
         if i_old == ynb_pts :
             break
-
 
     for j in range(len(X_new)) :
         x_new = X_new[j]
