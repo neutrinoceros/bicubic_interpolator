@@ -45,17 +45,11 @@ tdp = third_degree_polynom #alias
 
 def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as arguments
 
-    atAzimutBorder = j_old <= 1 or X_new[j] >= xmax
-    atRadialBorder = i_old <= 1 or Y_new[i] >= ymax
 
-    #default values
-    seed=s0=s1=s2=s3=0
     #dev note : those booleans should be global variables
     useXghostNEG1=useXghost0=useXghost1=False
 
-    # default case : not near any border
-    seed = j_old-2
-    s0,s1,s2,s3 = seed,seed+1,seed+2,seed+3
+
 
     # handling exceptions near azimuthal "borders" (periodic, really)
     if j_old == 1 :                    # case 1
@@ -71,6 +65,10 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
         seed = xnb_pts-2
         s0,s1,s2,s3 = seed,seed+1,0,1
         useXghost0=useXghost1 = True
+    else :                             # general case
+        seed = j_old-2
+        s0,s1,s2,s3 = seed,seed+1,seed+2,seed+3
+
 
     # handling exceptions near radial borders
     if i_old == 0 :           # case 1
