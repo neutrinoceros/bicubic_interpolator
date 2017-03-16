@@ -49,6 +49,7 @@ def update_indexes(i_old,j_old,xmax,ymax,s0,s1,s2,s3,l,\
                    lipjp,  lipjpp,  lipjppp,\
                    lippjp, lippjpp, lippjppp,\
                    lipppjp,lipppjpp,lipppjppp,\
+                   azimghost,\
                    useXghostNEG1,useXghost0,useXghost1,\
                    i0,shift) :
 
@@ -57,14 +58,17 @@ def update_indexes(i_old,j_old,xmax,ymax,s0,s1,s2,s3,l,\
     if j_old == 1 :           # case 1
         seed        = 0
         s0,s1,s2,s3 = xnb_pts-1,seed,seed+1,seed+2
+        azimghost   = -1
         useXghostNEG1 = True
     elif j_old == xnb_pts-1 : # case 2
         seed = xnb_pts-3
         s0,s1,s2,s3 = seed,seed+1,seed+2,0
+        azimghost   = 0
         useXghost0 = True
     elif j_old > xnb_pts-1 :  # case 3
         seed = xnb_pts-2
         s0,s1,s2,s3 = seed,seed+1,0,1
+        azimghost   = 1
         useXghost0=useXghost1 = True
     else :                    # general case
         seed = j_old-2
@@ -111,6 +115,7 @@ def update_indexes(i_old,j_old,xmax,ymax,s0,s1,s2,s3,l,\
         lipjp,  lipjpp,  lipjppp,\
         lippjp, lippjpp, lippjppp,\
         lipppjp,lipppjpp,lipppjppp,\
+        azimghost,\
         useXghostNEG1,useXghost0,useXghost1,\
         i0,shift
 
@@ -192,6 +197,7 @@ for i in range(len(Y_new)) :
     for j in range(len(X_new)) :
         x_new = X_new[j]
         y_new_dummy = y_new
+        azimghost=999
         update_required = False
 
         # update x index
@@ -210,6 +216,7 @@ for i in range(len(Y_new)) :
             lipjp,  lipjpp,  lipjppp,\
             lippjp, lippjpp, lippjppp,\
             lipppjp,lipppjpp,lipppjppp,\
+            azimghost,\
             useXghostNEG1,useXghost0,useXghost1,\
             i0,shift\
             = update_indexes(i_old,j_old,XMAX,YMAX,s0,s1,s2,s3,l,\
@@ -218,6 +225,7 @@ for i in range(len(Y_new)) :
                              lipjp,  lipjpp,  lipjppp,\
                              lippjp, lippjpp, lippjppp,\
                              lipppjp,lipppjpp,lipppjppp,\
+                             azimghost,\
                              useXghostNEG1,useXghost0,useXghost1,\
                              i0,shift)
 
