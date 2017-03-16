@@ -52,10 +52,7 @@ def update_indexes(i_old,j_old,xmax,ymax,s0,s1,s2,s3,l,\
                    useXghostNEG1,useXghost0,useXghost1,\
                    i0,shift) :
 
-    #dev note : those booleans should be global variables
     useXghostNEG1=useXghost0=useXghost1=False
-
-
     # handling exceptions near azimuthal "borders" (periodic, really)
     if j_old == 1 :           # case 1
         seed        = 0
