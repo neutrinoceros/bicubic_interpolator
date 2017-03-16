@@ -52,10 +52,8 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
     seed=s0=s1=s2=s3=0
     #dev note : those booleans should be global variables
     useXghostNEG1=useXghost0=useXghost1=False
-    useYghostIN=useYghostOUT=useYghostINNER=useYghostOUTER=False
 
     # default case : not near any border
-    shift = 0
     seed = j_old-2
     s0,s1,s2,s3 = seed,seed+1,seed+2,seed+3
 
@@ -77,16 +75,14 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
     # cases where we're near a radial border
     if i_old == 0 :           # case 1
         shift = 2
-        useYghostINNER = True
     elif i_old == 1 :         # case 2
         shift = 1
-        useYghostIN = True #not excatly useful here...
     elif i_old == ynb_pts-1 : # case 3
         shift = -1
-        useYghostOUT = True
     elif i_old == ynb_pts :   # case 4
         shift = -2
-        useYghostOUTER = True
+    else :
+        shift = 0
 
     i0 = i_old-2+shift
     # computation at long last
@@ -118,7 +114,6 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
         lippjp, lippjpp, lippjppp,\
         lipppjp,lipppjpp,lipppjppp,\
         useXghostNEG1,useXghost0,useXghost1,\
-        useYghostIN,useYghostOUT,useYghostINNER,useYghostOUTER,\
         i0,shift
 
 
@@ -218,7 +213,6 @@ for i in range(len(Y_new)) :
         lippjp, lippjpp, lippjppp,\
         lipppjp,lipppjpp,lipppjppp,\
         useXghostNEG1,useXghost0,useXghost1,\
-        useYghostIN,useYghostOUT,useYghostINNER,useYghostOUTER,\
         i0,shift\
         = update_indexes(i_old,j_old,XMAX,YMAX)
 
