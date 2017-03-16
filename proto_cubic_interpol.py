@@ -49,8 +49,7 @@ def update_indexes(i_old,j_old,xmax,ymax,s0,s1,s2,s3,l,\
                    lipjp,  lipjpp,  lipjppp,\
                    lippjp, lippjpp, lippjppp,\
                    lipppjp,lipppjpp,lipppjppp,\
-                   azimghost,\
-                   i0,shift) :
+                   azimghost,i0,shift) :
 
     # handling exceptions near azimuthal "borders" (periodic, really)
     if j_old == 1 :           # case 1
@@ -110,8 +109,7 @@ def update_indexes(i_old,j_old,xmax,ymax,s0,s1,s2,s3,l,\
         lipjp,  lipjpp,  lipjppp,\
         lippjp, lippjpp, lippjppp,\
         lipppjp,lipppjpp,lipppjppp,\
-        azimghost,\
-        i0,shift
+        azimghost,i0,shift
 
 
 # parameters -------------------------------------------------------------
