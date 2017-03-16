@@ -119,7 +119,7 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
         lipppjp,lipppjpp,lipppjppp,\
         useXghostNEG1,useXghost0,useXghost1,\
         useYghostIN,useYghostOUT,useYghostINNER,useYghostOUTER,\
-        i0
+        i0,shift
 
 
 # parameters -------------------------------------------------------------
@@ -219,7 +219,7 @@ for i in range(len(Y_new)) :
         lipppjp,lipppjpp,lipppjppp,\
         useXghostNEG1,useXghost0,useXghost1,\
         useYghostIN,useYghostOUT,useYghostINNER,useYghostOUTER,\
-        i0\
+        i0,shift\
         = update_indexes(i_old,j_old,XMAX,YMAX)
 
         if update_required :
@@ -264,9 +264,9 @@ for i in range(len(Y_new)) :
             Y20=Y21=Y22=Y23 = Y_old [i0+2]
             Y30=Y31=Y32=Y33 = Y_old [i0+3]
 
-            if useYghostINNER :
+            if shift == 2 :
                 y_new_dummy = Y00
-            elif useYghostOUTER :
+            elif shift == -2 :
                 y_new_dummy = Y30
 
             # field values
