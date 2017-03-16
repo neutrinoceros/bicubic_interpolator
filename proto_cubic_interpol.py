@@ -208,25 +208,6 @@ for i in range(len(Y_new)) :
         = update_indexes(i_old,j_old,XMAX,YMAX)
 
         if update_required :
-            #-----------------------------------------------------------------------------------------------
-            # those are useful to keep track of the steps in the interpolation so we can plot the 1d
-            # interpolated lines at the end.
-            # The try/except structure are used to avoid dealing with borders here
-            # try :
-            #     if i/i_old == y_enhance_factor :
-            #         try :
-            #             X0,X1,X2,X3 = X_old [j_old-2:j_old+2]
-            #             PP0,PP1,PP2,PP3 = data1d[i_old*(xnb_pts+1) + j_old-2 : i_old*(xnb_pts+1) + j_old+2]
-            #             AA,BB,CC,DD = update_coefficients(X0,PP0,X1,PP1,X2,PP2,X3,PP3,AA,BB,CC,DD)
-            #             #ax.plot(X_new,y_new*np.ones(len(X_new)),interpol_1d_x, color='r')
-            #         except ValueError :
-            #             pass
-
-            # except ZeroDivisionError :
-            #     pass
-            #-----------------------------------------------------------------------------------------------
-
-
             # the routine itself might be written in all generality but in practice
             # we know we will only use evenly spaced grids IN THETA (aka x here)
             X00,X01,X02,X03 = \
@@ -288,5 +269,4 @@ for i in range(len(Y_new)) :
         ax.scatter(X_old,Y_old[i_old]*np.ones(len(X_old)),data1d[i_old*xnb_pts : (i_old+1)*xnb_pts])
     ax.plot(X_new,y_new*np.ones(len(X_new)),interpol_data, color='c', lw=2, ls='-')
 
-plt.ion();plt.show();plt.ioff();raw_input("press anykey to quit    ")# uncomment for tests purposes
-#plt.savefig("coucou.png")
+plt.ion();plt.show();plt.ioff();raw_input("press anykey to quit    ")
