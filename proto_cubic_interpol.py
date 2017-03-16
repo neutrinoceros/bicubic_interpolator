@@ -202,24 +202,25 @@ for i in range(len(Y_new)) :
             if j_old == xnb_pts :
                 break
 
-        s0,s1,s2,s3,l,\
-        lip,    lipp,    lippp,\
-        ljp,    ljpp,    ljppp,\
-        lipjp,  lipjpp,  lipjppp,\
-        lippjp, lippjpp, lippjppp,\
-        lipppjp,lipppjpp,lipppjppp,\
-        useXghostNEG1,useXghost0,useXghost1,\
-        i0,shift\
-        = update_indexes(i_old,j_old,XMAX,YMAX,s0,s1,s2,s3,l,\
-                         lip,    lipp,    lippp,\
-                         ljp,    ljpp,    ljppp,\
-                         lipjp,  lipjpp,  lipjppp,\
-                         lippjp, lippjpp, lippjppp,\
-                         lipppjp,lipppjpp,lipppjppp,\
-                         useXghostNEG1,useXghost0,useXghost1,\
-                         i0,shift)
 
         if update_required :
+            s0,s1,s2,s3,l,\
+            lip,    lipp,    lippp,\
+            ljp,    ljpp,    ljppp,\
+            lipjp,  lipjpp,  lipjppp,\
+            lippjp, lippjpp, lippjppp,\
+            lipppjp,lipppjpp,lipppjppp,\
+            useXghostNEG1,useXghost0,useXghost1,\
+            i0,shift\
+            = update_indexes(i_old,j_old,XMAX,YMAX,s0,s1,s2,s3,l,\
+                             lip,    lipp,    lippp,\
+                             ljp,    ljpp,    ljppp,\
+                             lipjp,  lipjpp,  lipjppp,\
+                             lippjp, lippjpp, lippjppp,\
+                             lipppjp,lipppjpp,lipppjppp,\
+                             useXghostNEG1,useXghost0,useXghost1,\
+                             i0,shift)
+
             # the routine itself might be written in all generality but in practice
             # we know we will only use evenly spaced grids IN THETA (aka x here)
             X00,X01,X02,X03 = \
