@@ -118,7 +118,8 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
         lippjp, lippjpp, lippjppp,\
         lipppjp,lipppjpp,lipppjppp,\
         useXghostNEG1,useXghost0,useXghost1,\
-        useYghostIN,useYghostOUT,useYghostINNER,useYghostOUTER
+        useYghostIN,useYghostOUT,useYghostINNER,useYghostOUTER,\
+        i0
 
 
 # parameters -------------------------------------------------------------
@@ -217,7 +218,8 @@ for i in range(len(Y_new)) :
         lippjp, lippjpp, lippjppp,\
         lipppjp,lipppjpp,lipppjppp,\
         useXghostNEG1,useXghost0,useXghost1,\
-        useYghostIN,useYghostOUT,useYghostINNER,useYghostOUTER\
+        useYghostIN,useYghostOUT,useYghostINNER,useYghostOUTER,\
+        i0\
         = update_indexes(i_old,j_old,XMAX,YMAX)
 
         if update_required :
