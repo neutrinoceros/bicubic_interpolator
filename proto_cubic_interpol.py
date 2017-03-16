@@ -139,15 +139,6 @@ X_GHOSTneg1 = X_old[-1] - 2*np.pi
 X_GHOST0    = X_old[0 ] + 2*np.pi
 X_GHOST1    = X_old[1 ] + 2*np.pi
 
-#careful : those formulations may not work in logaritmic radial scaling
-#          where "ystep" in not uniquely defined
-# ystep = ywidth/(ynb_pts-1)
-# Y_GHOSTin    = Y_old[0]  -   ystep
-# Y_GHOSTinner = Y_old[0]  - 2*ystep
-# Y_GHOSTout   = Y_old[-1] +   ystep
-# Y_GHOSTouter = Y_old[-1] + 2*ystep
-#------------------------------------- deprecated
-
 data_nb_pts = xnb_pts*ynb_pts
 data1d = rd.normal(1,0.1,data_nb_pts)
 
