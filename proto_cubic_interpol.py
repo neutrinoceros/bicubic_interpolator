@@ -50,7 +50,6 @@ def update_indexes(i_old,j_old,xmax,ymax,s0,s1,s2,s3,l,\
                    lippjp, lippjpp, lippjppp,\
                    lipppjp,lipppjpp,lipppjppp,\
                    azimghost,\
-                   useXghostNEG1,useXghost0,useXghost1,\
                    i0,shift) :
 
     useXghostNEG1=useXghost0=useXghost1=False
@@ -116,7 +115,6 @@ def update_indexes(i_old,j_old,xmax,ymax,s0,s1,s2,s3,l,\
         lippjp, lippjpp, lippjppp,\
         lipppjp,lipppjpp,lipppjppp,\
         azimghost,\
-        useXghostNEG1,useXghost0,useXghost1,\
         i0,shift
 
 
@@ -178,7 +176,6 @@ lipjp  =lipjpp  =lipjppp  = \
 lippjp =lippjpp =lippjppp = \
 lipppjp=lipppjpp=lipppjppp= \
 i0     =shift             = 0
-useXghostNEG1=useXghost0=useXghost1 = False
 
 
 for i in range(len(Y_new)) :
@@ -217,7 +214,6 @@ for i in range(len(Y_new)) :
             lippjp, lippjpp, lippjppp,\
             lipppjp,lipppjpp,lipppjppp,\
             azimghost,\
-            useXghostNEG1,useXghost0,useXghost1,\
             i0,shift\
             = update_indexes(i_old,j_old,XMAX,YMAX,s0,s1,s2,s3,l,\
                              lip,    lipp,    lippp,\
@@ -226,7 +222,6 @@ for i in range(len(Y_new)) :
                              lippjp, lippjpp, lippjppp,\
                              lipppjp,lipppjpp,lipppjppp,\
                              azimghost,\
-                             useXghostNEG1,useXghost0,useXghost1,\
                              i0,shift)
 
             # the routine itself might be written in all generality but in practice
