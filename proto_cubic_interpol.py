@@ -220,105 +220,103 @@ for i in range(len(Y_new)) :
         useYghostIN,useYghostOUT,useYghostINNER,useYghostOUTER\
         = update_indexes(i_old,j_old,XMAX,YMAX)
 
-        goOn = True
-        if goOn :# à terme, ce niveau d'indentation doit être supprimé
-            if update_required :
-                #-----------------------------------------------------------------------------------------------
-                # those are useful to keep track of the steps in the interpolation so we can plot the 1d
-                # interpolated lines at the end.
-                # The try/except structure are used to avoid dealing with borders here
-                # try :
-                #     if i/i_old == y_enhance_factor :
-                #         try :
-                #             X0,X1,X2,X3 = X_old [j_old-2:j_old+2]
-                #             PP0,PP1,PP2,PP3 = data1d[i_old*(xnb_pts+1) + j_old-2 : i_old*(xnb_pts+1) + j_old+2]
-                #             AA,BB,CC,DD = update_coefficients(X0,PP0,X1,PP1,X2,PP2,X3,PP3,AA,BB,CC,DD)
-                #             #ax.plot(X_new,y_new*np.ones(len(X_new)),interpol_1d_x, color='r')
-                #         except ValueError :
-                #             pass
+        if update_required :
+            #-----------------------------------------------------------------------------------------------
+            # those are useful to keep track of the steps in the interpolation so we can plot the 1d
+            # interpolated lines at the end.
+            # The try/except structure are used to avoid dealing with borders here
+            # try :
+            #     if i/i_old == y_enhance_factor :
+            #         try :
+            #             X0,X1,X2,X3 = X_old [j_old-2:j_old+2]
+            #             PP0,PP1,PP2,PP3 = data1d[i_old*(xnb_pts+1) + j_old-2 : i_old*(xnb_pts+1) + j_old+2]
+            #             AA,BB,CC,DD = update_coefficients(X0,PP0,X1,PP1,X2,PP2,X3,PP3,AA,BB,CC,DD)
+            #             #ax.plot(X_new,y_new*np.ones(len(X_new)),interpol_1d_x, color='r')
+            #         except ValueError :
+            #             pass
 
-                # except ZeroDivisionError :
-                #     pass
-                #-----------------------------------------------------------------------------------------------
+            # except ZeroDivisionError :
+            #     pass
+            #-----------------------------------------------------------------------------------------------
 
 
-                # the routine itself might be written in all generality but in practice
-                # we know we will only use evenly spaced grids IN THETA (aka x here)
-                X00,X01,X02,X03 = \
-                X10,X11,X12,X13 = \
-                X20,X21,X22,X23 = \
-                X30,X31,X32,X33 = X_old [s0], X_old [s1], X_old [s2], X_old [s3]
+            # the routine itself might be written in all generality but in practice
+            # we know we will only use evenly spaced grids IN THETA (aka x here)
+            X00,X01,X02,X03 = \
+            X10,X11,X12,X13 = \
+            X20,X21,X22,X23 = \
+            X30,X31,X32,X33 = X_old [s0], X_old [s1], X_old [s2], X_old [s3]
 
-                if   useXghostNEG1                 : #case 1
-                    X00=X10=X20=X30 = X_GHOSTneg1
-                elif useXghost0 and not useXghost1 : #case 2
-                    X03=X13=X23=X33 = X_GHOST0
-                elif useXghost0 and     useXghost1 : #case 3
-                    X02=X12=X22=X32 = X_GHOST0
-                    X03=X13=X23=X33 = X_GHOST1
+            if   useXghostNEG1                 : #case 1
+                X00=X10=X20=X30 = X_GHOSTneg1
+            elif useXghost0 and not useXghost1 : #case 2
+                X03=X13=X23=X33 = X_GHOST0
+            elif useXghost0 and     useXghost1 : #case 3
+                X02=X12=X22=X32 = X_GHOST0
+                X03=X13=X23=X33 = X_GHOST1
 
-                # however, we don't enconter any concerning issue with log-spaced
-                # radial grids but the syntax ought to be different
+            # however, we don't enconter any concerning issue with log-spaced
+            # radial grids but the syntax ought to be different
 
-                if   useYghostINNER : #case 1 #condition should be equivalent to (useYghostIN && useYghostINNER)
-                    Y00=Y01=Y02=Y03 = Y_old [0]
-                    Y10=Y11=Y12=Y13 = Y_old [1]
-                    Y20=Y21=Y22=Y23 = Y_old [2]
-                    Y30=Y31=Y32=Y33 = Y_old [3]
-                    y_new_dummy = Y00
-                elif useYghostIN    : #case 2
-                    #shifting 1 line away from the border
-                    Y00=Y01=Y02=Y03 = Y_old [0]
-                    Y10=Y11=Y12=Y13 = Y_old [1]
-                    Y20=Y21=Y22=Y23 = Y_old [2]
-                    Y30=Y31=Y32=Y33 = Y_old [3]
-                elif useYghostOUTER : #case 4 #condition should be equivalent to (useYghostOUT && useYghostOUTER)
-                    Y00=Y01=Y02=Y03 = Y_old [i_old-4]
-                    Y10=Y11=Y12=Y13 = Y_old [i_old-3]
-                    Y20=Y21=Y22=Y23 = Y_old [i_old-2]
-                    Y30=Y31=Y32=Y33 = Y_old [i_old-1]
-                    y_new_dummy = Y30
-                elif useYghostOUT   : #case 3
-                    #shifting 1 line away from the border
-                    Y00=Y01=Y02=Y03 = Y_old [i_old-3]
-                    Y10=Y11=Y12=Y13 = Y_old [i_old-2]
-                    Y20=Y21=Y22=Y23 = Y_old [i_old-1]
-                    Y30=Y31=Y32=Y33 = Y_old [i_old  ]
-                else : #general case : away from the radial border where the 16 neighbours are correctly defined
-                    Y00=Y01=Y02=Y03 = Y_old [i_old-2]
-                    Y10=Y11=Y12=Y13 = Y_old [i_old-1]
-                    Y20=Y21=Y22=Y23 = Y_old [i_old  ]
-                    Y30=Y31=Y32=Y33 = Y_old [i_old+1]
+            if   useYghostINNER : #case 1 #condition should be equivalent to (useYghostIN && useYghostINNER)
+                Y00=Y01=Y02=Y03 = Y_old [0]
+                Y10=Y11=Y12=Y13 = Y_old [1]
+                Y20=Y21=Y22=Y23 = Y_old [2]
+                Y30=Y31=Y32=Y33 = Y_old [3]
+                y_new_dummy = Y00
+            elif useYghostIN    : #case 2
+                #shifting 1 line away from the border
+                Y00=Y01=Y02=Y03 = Y_old [0]
+                Y10=Y11=Y12=Y13 = Y_old [1]
+                Y20=Y21=Y22=Y23 = Y_old [2]
+                Y30=Y31=Y32=Y33 = Y_old [3]
+            elif useYghostOUTER : #case 4 #condition should be equivalent to (useYghostOUT && useYghostOUTER)
+                Y00=Y01=Y02=Y03 = Y_old [i_old-4]
+                Y10=Y11=Y12=Y13 = Y_old [i_old-3]
+                Y20=Y21=Y22=Y23 = Y_old [i_old-2]
+                Y30=Y31=Y32=Y33 = Y_old [i_old-1]
+                y_new_dummy = Y30
+            elif useYghostOUT   : #case 3
+                #shifting 1 line away from the border
+                Y00=Y01=Y02=Y03 = Y_old [i_old-3]
+                Y10=Y11=Y12=Y13 = Y_old [i_old-2]
+                Y20=Y21=Y22=Y23 = Y_old [i_old-1]
+                Y30=Y31=Y32=Y33 = Y_old [i_old  ]
+            else : #general case : away from the radial border where the 16 neighbours are correctly defined
+                Y00=Y01=Y02=Y03 = Y_old [i_old-2]
+                Y10=Y11=Y12=Y13 = Y_old [i_old-1]
+                Y20=Y21=Y22=Y23 = Y_old [i_old  ]
+                Y30=Y31=Y32=Y33 = Y_old [i_old+1]
 
-                # field values
-                P00,P01,P02,P03 = data1d[l],    data1d[ljp],    data1d[ljpp],     data1d[ljppp]
-                P10,P11,P12,P13 = data1d[lip],  data1d[lipjp],  data1d[lipjpp],   data1d[lipjppp]
-                P20,P21,P22,P23 = data1d[lipp], data1d[lippjp], data1d[lippjpp],  data1d[lippjppp]
-                P30,P31,P32,P33 = data1d[lippp],data1d[lipppjp],data1d[lipppjpp], data1d[lipppjppp]
+            # field values
+            P00,P01,P02,P03 = data1d[l],    data1d[ljp],    data1d[ljpp],     data1d[ljppp]
+            P10,P11,P12,P13 = data1d[lip],  data1d[lipjp],  data1d[lipjpp],   data1d[lipjppp]
+            P20,P21,P22,P23 = data1d[lipp], data1d[lippjp], data1d[lippjpp],  data1d[lippjppp]
+            P30,P31,P32,P33 = data1d[lippp],data1d[lipppjp],data1d[lipppjpp], data1d[lipppjppp]
 
-                # finally, update all the coefficients
-                A0,B0,C0,D0 = update_coefficients(X00,P00,X01,P01,X02,P02,X03,P03,A0,B0,C0,D0)
-                A1,B1,C1,D1 = update_coefficients(X10,P10,X11,P11,X12,P12,X13,P13,A1,B1,C1,D1)
-                A2,B2,C2,D2 = update_coefficients(X20,P20,X21,P21,X22,P22,X23,P23,A2,B2,C2,D2)
-                A3,B3,C3,D3 = update_coefficients(X30,P30,X31,P31,X32,P32,X33,P33,A3,B3,C3,D3)
+            # finally, update all the coefficients
+            A0,B0,C0,D0 = update_coefficients(X00,P00,X01,P01,X02,P02,X03,P03,A0,B0,C0,D0)
+            A1,B1,C1,D1 = update_coefficients(X10,P10,X11,P11,X12,P12,X13,P13,A1,B1,C1,D1)
+            A2,B2,C2,D2 = update_coefficients(X20,P20,X21,P21,X22,P22,X23,P23,A2,B2,C2,D2)
+            A3,B3,C3,D3 = update_coefficients(X30,P30,X31,P31,X32,P32,X33,P33,A3,B3,C3,D3)
 
-                interpol_1d_x[j] = tdp(AA,BB,CC,DD,x_new)
+            interpol_1d_x[j] = tdp(AA,BB,CC,DD,x_new)
 
-            # this is where magic happens
-            P0 = tdp(A0,B0,C0,D0,x_new)
-            P1 = tdp(A1,B1,C1,D1,x_new)
-            P2 = tdp(A2,B2,C2,D2,x_new)
-            P3 = tdp(A3,B3,C3,D3,x_new)
+        # this is where magic happens
+        P0 = tdp(A0,B0,C0,D0,x_new)
+        P1 = tdp(A1,B1,C1,D1,x_new)
+        P2 = tdp(A2,B2,C2,D2,x_new)
+        P3 = tdp(A3,B3,C3,D3,x_new)
 
-            A,B,C,D = update_coefficients(Y00,P0,Y10,P1,Y20,P2,Y30,P3,A,B,C,D)
-            interpol_value = tdp(A,B,C,D,y_new_dummy)
-            interpol_data[j] = interpol_value
+        A,B,C,D = update_coefficients(Y00,P0,Y10,P1,Y20,P2,Y30,P3,A,B,C,D)
+        interpol_value = tdp(A,B,C,D,y_new_dummy)
+        interpol_data[j] = interpol_value
 
-            # those lines are used to keep track and debug the process -------------
-            #dummy_x = x_new*np.ones(100)
-            #dummy_y = np.linspace(0.,ywidth,100)
-            #ax.plot(dummy_x,dummy_y,tdp(A,B,C,D,dummy_y),color = 'k', ls = '--')
-            # ----------------------------------------------------------------------
+        # those lines are used to keep track and debug the process -------------
+        #dummy_x = x_new*np.ones(100)
+        #dummy_y = np.linspace(0.,ywidth,100)
+        #ax.plot(dummy_x,dummy_y,tdp(A,B,C,D,dummy_y),color = 'k', ls = '--')
+        # ----------------------------------------------------------------------
 
     if i_old < ynb_pts :
         ax.scatter(X_old,Y_old[i_old]*np.ones(len(X_old)),data1d[i_old*xnb_pts : (i_old+1)*xnb_pts])
