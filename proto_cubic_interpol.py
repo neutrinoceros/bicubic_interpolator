@@ -54,15 +54,15 @@ def update_indexes(i_old,j_old,xmax,ymax,s0,s1,s2,s3,l,\
 
     # handling exceptions near azimuthal "borders" (periodic, really)
     if j_old == 1 :           # case 1
-        seed        = 0
+        seed        = 0                             #useless line only for the sake of giving similar looks to every case
         s0,s1,s2,s3 = xnb_pts-1,seed,seed+1,seed+2
         azimghost   = -1
     elif j_old == xnb_pts-1 : # case 2
-        seed = xnb_pts-3
+        seed        = xnb_pts-3
         s0,s1,s2,s3 = seed,seed+1,seed+2,0
         azimghost   = 0
     elif j_old > xnb_pts-1 :  # case 3
-        seed = xnb_pts-2
+        seed        = xnb_pts-2
         s0,s1,s2,s3 = seed,seed+1,0,1
         azimghost   = 1
     else :                    # general case
