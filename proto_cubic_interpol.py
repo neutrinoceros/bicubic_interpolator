@@ -207,11 +207,11 @@ for i in range(len(Y_new)) :
             X20,X21,X22,X23 = \
             X30,X31,X32,X33 = X_old [s0], X_old [s1], X_old [s2], X_old [s3]
 
-            if   useXghostNEG1                 : #case 1
+            if useXghostNEG1 :                   # case 1
                 X00=X10=X20=X30 = X_GHOSTneg1
-            elif useXghost0 and not useXghost1 : #case 2
+            elif useXghost0 and not useXghost1 : # case 2
                 X03=X13=X23=X33 = X_GHOST0
-            elif useXghost0 and     useXghost1 : #case 3
+            elif useXghost0 and useXghost1 :     # case 3
                 X02=X12=X22=X32 = X_GHOST0
                 X03=X13=X23=X33 = X_GHOST1
 
