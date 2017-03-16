@@ -57,7 +57,7 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
     seed = j_old-2
     s0,s1,s2,s3 = seed,seed+1,seed+2,seed+3
 
-    # cases where we're near an azimuthal "border"
+    # handling exceptions near azimuthal "borders" (periodic, really)
     if j_old == 1 :                    # case 1
         seed        = 0
         s0,s1,s2,s3 = xnb_pts-1,seed,seed+1,seed+2
@@ -72,7 +72,7 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
         s0,s1,s2,s3 = seed,seed+1,0,1
         useXghost0=useXghost1 = True
 
-    # cases where we're near a radial border
+    # handling exceptions near radial borders
     if i_old == 0 :           # case 1
         shift = 2
     elif i_old == 1 :         # case 2
@@ -81,7 +81,7 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
         shift = -1
     elif i_old == ynb_pts :   # case 4
         shift = -2
-    else :
+    else :                    # general case
         shift = 0
 
     i0 = i_old-2+shift
