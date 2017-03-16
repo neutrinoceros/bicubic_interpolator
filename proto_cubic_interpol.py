@@ -259,36 +259,15 @@ for i in range(len(Y_new)) :
 
             # however, we don't enconter any concerning issue with log-spaced
             # radial grids but the syntax ought to be different
+            Y00=Y01=Y02=Y03 = Y_old [i0  ]
+            Y10=Y11=Y12=Y13 = Y_old [i0+1]
+            Y20=Y21=Y22=Y23 = Y_old [i0+2]
+            Y30=Y31=Y32=Y33 = Y_old [i0+3]
 
-            if   useYghostINNER : #case 1 #condition should be equivalent to (useYghostIN && useYghostINNER)
-                Y00=Y01=Y02=Y03 = Y_old [0]
-                Y10=Y11=Y12=Y13 = Y_old [1]
-                Y20=Y21=Y22=Y23 = Y_old [2]
-                Y30=Y31=Y32=Y33 = Y_old [3]
+            if useYghostINNER :
                 y_new_dummy = Y00
-            elif useYghostIN    : #case 2
-                #shifting 1 line away from the border
-                Y00=Y01=Y02=Y03 = Y_old [0]
-                Y10=Y11=Y12=Y13 = Y_old [1]
-                Y20=Y21=Y22=Y23 = Y_old [2]
-                Y30=Y31=Y32=Y33 = Y_old [3]
-            elif useYghostOUTER : #case 4 #condition should be equivalent to (useYghostOUT && useYghostOUTER)
-                Y00=Y01=Y02=Y03 = Y_old [i_old-4]
-                Y10=Y11=Y12=Y13 = Y_old [i_old-3]
-                Y20=Y21=Y22=Y23 = Y_old [i_old-2]
-                Y30=Y31=Y32=Y33 = Y_old [i_old-1]
+            elif useYghostOUTER :
                 y_new_dummy = Y30
-            elif useYghostOUT   : #case 3
-                #shifting 1 line away from the border
-                Y00=Y01=Y02=Y03 = Y_old [i_old-3]
-                Y10=Y11=Y12=Y13 = Y_old [i_old-2]
-                Y20=Y21=Y22=Y23 = Y_old [i_old-1]
-                Y30=Y31=Y32=Y33 = Y_old [i_old  ]
-            else : #general case : away from the radial border where the 16 neighbours are correctly defined
-                Y00=Y01=Y02=Y03 = Y_old [i_old-2]
-                Y10=Y11=Y12=Y13 = Y_old [i_old-1]
-                Y20=Y21=Y22=Y23 = Y_old [i_old  ]
-                Y30=Y31=Y32=Y33 = Y_old [i_old+1]
 
             # field values
             P00,P01,P02,P03 = data1d[l],    data1d[ljp],    data1d[ljpp],     data1d[ljppp]
