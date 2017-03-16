@@ -43,7 +43,14 @@ def third_degree_polynom(a,b,c,d,x) :
 tdp = third_degree_polynom #alias
 
 
-def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as arguments
+def update_indexes(i_old,j_old,xmax,ymax,s0,s1,s2,s3,l,\
+                   lip,    lipp,    lippp,\
+                   ljp,    ljpp,    ljppp,\
+                   lipjp,  lipjpp,  lipjppp,\
+                   lippjp, lippjpp, lippjppp,\
+                   lipppjp,lipppjpp,lipppjppp,\
+                   useXghostNEG1,useXghost0,useXghost1,\
+                   i0,shift) :
 
     #dev note : those booleans should be global variables
     useXghostNEG1=useXghost0=useXghost1=False
@@ -162,6 +169,15 @@ A2=B2=C2=D2= \
 A3=B3=C3=D3= \
 A =B =C =D = 0.
 
+s0=s1=s2=s3=l=              \
+lip    =lipp    =lippp    = \
+ljp    =ljpp    =ljppp    = \
+lipjp  =lipjpp  =lipjppp  = \
+lippjp =lippjpp =lippjppp = \
+lipppjp=lipppjpp=lipppjppp= \
+i0     =shift             = 0
+useXghostNEG1=useXghost0=useXghost1 = False
+
 
 for i in range(len(Y_new)) :
     y_new = Y_new[i]
@@ -197,7 +213,14 @@ for i in range(len(Y_new)) :
         lipppjp,lipppjpp,lipppjppp,\
         useXghostNEG1,useXghost0,useXghost1,\
         i0,shift\
-        = update_indexes(i_old,j_old,XMAX,YMAX)
+        = update_indexes(i_old,j_old,XMAX,YMAX,s0,s1,s2,s3,l,\
+                         lip,    lipp,    lippp,\
+                         ljp,    ljpp,    ljppp,\
+                         lipjp,  lipjpp,  lipjppp,\
+                         lippjp, lippjpp, lippjppp,\
+                         lipppjp,lipppjpp,lipppjppp,\
+                         useXghostNEG1,useXghost0,useXghost1,\
+                         i0,shift)
 
         if update_required :
             # the routine itself might be written in all generality but in practice
