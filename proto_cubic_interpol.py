@@ -93,12 +93,12 @@ def update_indexes(i_old,j_old,xmax,ymax) :#todo : fake C incorporate returns as
         useYghostOUTER = True
         goOn = True
 
-
+    i0 = i_old-2+shift
     # computation at long last
-    l         = s0 + (i_old-2+shift)*xnb_pts
-    ljp       = s1 + (i_old-2+shift)*xnb_pts
-    ljpp      = s2 + (i_old-2+shift)*xnb_pts
-    ljppp     = s3 + (i_old-2+shift)*xnb_pts
+    l         = s0 + i0*xnb_pts
+    ljp       = s1 + i0*xnb_pts
+    ljpp      = s2 + i0*xnb_pts
+    ljppp     = s3 + i0*xnb_pts
 
     lip       = l     +   xnb_pts
     lipp      = l     + 2*xnb_pts
